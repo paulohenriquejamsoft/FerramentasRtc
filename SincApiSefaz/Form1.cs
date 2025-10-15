@@ -1,3 +1,5 @@
+using System.Text.Json;
+using SincApiSefaz.Repositorios;
 using SincApiSefaz.Servicos;
 
 namespace SincApiSefaz
@@ -62,6 +64,14 @@ namespace SincApiSefaz
             {
                 MessageBox.Show($"Erro ao importar classificações tributárias: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }       
+        }
+
+        private async void btnExportarCClassTrib_Click(object sender, EventArgs e)
+        {
+            var registros = await new ClassifTributariaRepository().ObterDadosExportacao();
+
+            var planilha = JsonSerializer.Serialize(registros);
+            System.IO.File.WriteAllText("tabela_cst_cclasstrib.json", planilha);
+        }
     }
 }

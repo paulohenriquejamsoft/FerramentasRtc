@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using SincApiSefaz.Dao;
+using SincApiSefaz.Dto;
 using SincApiSefaz.Models.Erp;
 
 namespace SincApiSefaz.Repositorios
@@ -12,6 +13,14 @@ namespace SincApiSefaz.Repositorios
             var resultado = await cnx.QueryAsync<ClassifTributaria>("SELECT * FROM CbsIbs_ClassifTributaria ORDER BY ID ASC");
 
             return (resultado ?? new List<ClassifTributaria>()).ToList();
+        }
+
+        public async Task<List<ClassificacaoTributariaJson>> ObterDadosExportacao()
+        {
+            var cnx = Conexao.ObterConexao();
+            var resultado = await cnx.QueryAsync<ClassificacaoTributariaJson>("SELECT SITUACAO.CODIGO AS CSTIBS, CLASSIFICACAO.* FROM CBSIBS_CLASSIFTRIBUTARIA AS CLASSIFICACAO INNER JOIN CBSIBS_SITUACAOTRIBUTARIA AS SITUACAO ON SITUACAO.ID=CLASSIFICACAO.IDSITUACAOTRIBUTARIA ORDER BY CLASSIFICACAO.ID ASC");
+
+            return (resultado ?? new List<ClassificacaoTributariaJson>()).ToList();
         }
 
         public async Task<List<ClassifTributaria>> SalvarAtualizar(List<ClassifTributaria> classificacoes)

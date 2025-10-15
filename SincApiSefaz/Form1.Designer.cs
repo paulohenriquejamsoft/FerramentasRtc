@@ -31,8 +31,9 @@
             BtnSincronizarMunicipios = new Button();
             BtnSituacaoTributaria = new Button();
             groupBox1 = new GroupBox();
-            BtnClassificacaoTributaria = new Button();
             btnClassTrib031025 = new Button();
+            BtnClassificacaoTributaria = new Button();
+            btnExportarCClassTrib = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -58,6 +59,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnExportarCClassTrib);
             groupBox1.Controls.Add(btnClassTrib031025);
             groupBox1.Controls.Add(BtnClassificacaoTributaria);
             groupBox1.Controls.Add(BtnSincronizarMunicipios);
@@ -69,6 +71,16 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Sincronizações";
             // 
+            // btnClassTrib031025
+            // 
+            btnClassTrib031025.Location = new Point(6, 85);
+            btnClassTrib031025.Name = "btnClassTrib031025";
+            btnClassTrib031025.Size = new Size(190, 23);
+            btnClassTrib031025.TabIndex = 3;
+            btnClassTrib031025.Text = "Ler - Tab ClassTrib - 03/10/2025";
+            btnClassTrib031025.UseVisualStyleBackColor = true;
+            btnClassTrib031025.Click += btnClassTrib031025_Click;
+            // 
             // BtnClassificacaoTributaria
             // 
             BtnClassificacaoTributaria.Location = new Point(343, 22);
@@ -79,15 +91,15 @@
             BtnClassificacaoTributaria.UseVisualStyleBackColor = true;
             BtnClassificacaoTributaria.Click += BtnClassificacaoTributaria_Click;
             // 
-            // btnClassTrib031025
+            // btnExportarCClassTrib
             // 
-            btnClassTrib031025.Location = new Point(6, 85);
-            btnClassTrib031025.Name = "btnClassTrib031025";
-            btnClassTrib031025.Size = new Size(190, 23);
-            btnClassTrib031025.TabIndex = 3;
-            btnClassTrib031025.Text = "Ler - Tab ClassTrib - 03/10/2025";
-            btnClassTrib031025.UseVisualStyleBackColor = true;
-            btnClassTrib031025.Click += btnClassTrib031025_Click;
+            btnExportarCClassTrib.Location = new Point(212, 85);
+            btnExportarCClassTrib.Name = "btnExportarCClassTrib";
+            btnExportarCClassTrib.Size = new Size(190, 23);
+            btnExportarCClassTrib.TabIndex = 4;
+            btnExportarCClassTrib.Text = "Exportar cClassTrib";
+            btnExportarCClassTrib.UseVisualStyleBackColor = true;
+            btnExportarCClassTrib.Click += btnExportarCClassTrib_Click;
             // 
             // Form1
             // 
@@ -108,5 +120,6 @@
         private GroupBox groupBox1;
         private Button BtnClassificacaoTributaria;
         private Button btnClassTrib031025;
+        private Button btnExportarCClassTrib;
     }
 }
