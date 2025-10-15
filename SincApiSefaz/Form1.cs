@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Windows.Forms;
 using SincApiSefaz.Repositorios;
 using SincApiSefaz.Servicos;
 
@@ -71,7 +72,9 @@ namespace SincApiSefaz
             var registros = await new ClassifTributariaRepository().ObterDadosExportacao();
 
             var planilha = JsonSerializer.Serialize(registros);
-            System.IO.File.WriteAllText("tabela_cst_cclasstrib.json", planilha);
+            System.IO.File.WriteAllText("tabela_cst_cclasstrib.json", planilha, System.Text.Encoding.UTF8);
+
+            MessageBox.Show($"Arquivo Exportado", "JAMSOFT Tecnologia", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
