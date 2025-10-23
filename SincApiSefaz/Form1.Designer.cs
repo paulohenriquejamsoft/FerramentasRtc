@@ -31,9 +31,11 @@
             BtnSincronizarMunicipios = new Button();
             BtnSituacaoTributaria = new Button();
             groupBox1 = new GroupBox();
+            btnImportarNcm = new Button();
+            btnExportarCClassTrib = new Button();
             btnClassTrib031025 = new Button();
             BtnClassificacaoTributaria = new Button();
-            btnExportarCClassTrib = new Button();
+            button1 = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -59,6 +61,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnImportarNcm);
             groupBox1.Controls.Add(btnExportarCClassTrib);
             groupBox1.Controls.Add(btnClassTrib031025);
             groupBox1.Controls.Add(BtnClassificacaoTributaria);
@@ -70,6 +73,26 @@
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Sincronizações";
+            // 
+            // btnImportarNcm
+            // 
+            btnImportarNcm.Location = new Point(418, 85);
+            btnImportarNcm.Name = "btnImportarNcm";
+            btnImportarNcm.Size = new Size(115, 23);
+            btnImportarNcm.TabIndex = 5;
+            btnImportarNcm.Text = "Importar Tabela Ncm";
+            btnImportarNcm.UseVisualStyleBackColor = true;
+            btnImportarNcm.Click += btnImportarNcm_Click;
+            // 
+            // btnExportarCClassTrib
+            // 
+            btnExportarCClassTrib.Location = new Point(212, 85);
+            btnExportarCClassTrib.Name = "btnExportarCClassTrib";
+            btnExportarCClassTrib.Size = new Size(190, 23);
+            btnExportarCClassTrib.TabIndex = 4;
+            btnExportarCClassTrib.Text = "Exportar cClassTrib";
+            btnExportarCClassTrib.UseVisualStyleBackColor = true;
+            btnExportarCClassTrib.Click += btnExportarCClassTrib_Click;
             // 
             // btnClassTrib031025
             // 
@@ -91,21 +114,21 @@
             BtnClassificacaoTributaria.UseVisualStyleBackColor = true;
             BtnClassificacaoTributaria.Click += BtnClassificacaoTributaria_Click;
             // 
-            // btnExportarCClassTrib
+            // button1
             // 
-            btnExportarCClassTrib.Location = new Point(212, 85);
-            btnExportarCClassTrib.Name = "btnExportarCClassTrib";
-            btnExportarCClassTrib.Size = new Size(190, 23);
-            btnExportarCClassTrib.TabIndex = 4;
-            btnExportarCClassTrib.Text = "Exportar cClassTrib";
-            btnExportarCClassTrib.UseVisualStyleBackColor = true;
-            btnExportarCClassTrib.Click += btnExportarCClassTrib_Click;
+            button1.Location = new Point(517, 210);
+            button1.Name = "button1";
+            button1.Size = new Size(8, 8);
+            button1.TabIndex = 3;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(623, 287);
+            ClientSize = new Size(576, 373);
+            Controls.Add(button1);
             Controls.Add(groupBox1);
             Name = "Form1";
             Text = "Form1";
@@ -121,5 +144,7 @@
         private Button BtnClassificacaoTributaria;
         private Button btnClassTrib031025;
         private Button btnExportarCClassTrib;
+        private Button btnImportarNcm;
+        private Button button1;
     }
 }
