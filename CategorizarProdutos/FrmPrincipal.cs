@@ -1,7 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using CategorizarProdutos.Dao;
+using CategorizarProdutos.Dto;
+using CategorizarProdutos.Models.Produtos;
 using CategorizarProdutos.Repositorios;
 
 namespace CategorizarProdutos
@@ -51,7 +58,6 @@ namespace CategorizarProdutos
                 if (Conexao.TestarConexao())
                 {
                     pnFerramentas.Enabled = true;
-                    MessageBox.Show("Conexão bem-sucedida!", "Sucesso");
                 }
                 else
                 {
@@ -66,10 +72,117 @@ namespace CategorizarProdutos
 
         private void btnNaturezaTributacao_Click(object sender, EventArgs e)
         {
-            using(var frm = new FrmNaturezaTributacao())
+            using (var frm = new FrmNaturezaTributacao())
             {
                 frm.ShowDialog();
-            }           
+            }
+        }
+
+        private async void btnExportarProdComAnexo_Click(object sender, EventArgs e)
+        {
+            var produtosClassificados = await ClassificarProdutos();
+            if(produtosClassificados == null || produtosClassificados.Count == 0)
+            {
+                MessageBox.Show("Nenhum produto encontrado para classificação.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+
+            //var fileDialog = new SaveFileDialog
+            //{
+            //    Filter = "Arquivo Excel (*.xlsx)|*.xlsx",
+            //    Title = "Salvar arquivo Excel"
+            //};
+            //fileDialog.ShowDialog();
+
+            //var nomeArquivo = fileDialog.FileName;
+            //if (string.IsNullOrWhiteSpace(nomeArquivo))
+            //{
+            //    MessageBox.Show("Operação cancelada.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return;
+            //}
+
+
+            //nomeArquivo = $"{nomeArquivo}.xlsx";          
+        }
+
+        private async Task<List<ProdutoClassificacao>> ClassificarProdutos()
+        {
+            var produtos = new List<ProdutoClassificacao>();
+            var ncmsTabela = CarregarTabelaNcm();
+            if (ncmsTabela == null || ncmsTabela.Count == 0)
+            {
+                MessageBox.Show("Não foi possível carregar a tabela NCM.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return produtos;
+            }
+
+            var combinacoes = ncmsTabela
+               .Select(x => x.CodigoProxy.Length)
+               .Distinct()
+               .OrderBy(x => x)
+               .ToList();
+
+            var produtosRepo = new ProdutoRepository();
+            produtos = await produtosRepo.ObterParaClassificacao();
+
+            produtos = produtos.OrderBy(p => p.CodigoNcm).ToList();
+
+            var posibilidades = new List<string>();
+            var ultimoNcm = string.Empty;
+            var ultimoIndiceValido = -1;
+            foreach (var produto in produtos)
+            {
+                if (ultimoNcm.Equals(produto.CodigoNcm))
+                {
+                    produto.Anexos = produtos[ultimoIndiceValido].Anexos;
+                    ultimoIndiceValido++;
+                    continue;
+                }
+
+                posibilidades.Clear();
+                foreach (var tamanho in combinacoes)
+                {
+                    if (produto.CodigoNcm.Length >= tamanho)
+                    {
+                        var combinacao = produto.CodigoNcm.Substring(0, tamanho);
+                        posibilidades.Add(combinacao);
+                    }
+                }
+
+                var anexosEncontrados = ncmsTabela
+                    .Where(n => posibilidades.Contains(n.CodigoProxy))
+                    .SelectMany(n => n.Anexos)
+                    .GroupBy(g => new { g.CclasTrib, g.Cst, g.Anexo, g.Legislacao })
+                    .ToList();
+
+                if (anexosEncontrados.Count > 0)
+                {
+                    foreach (var anexos in anexosEncontrados)
+                    {
+
+                        produto.Anexos.Add(new InformacaoAnexo
+                        {
+                            CclasTrib = anexos.Key.CclasTrib,
+                            Cst = anexos.Key.Cst,
+                            Anexo = anexos.Key.Anexo,
+                            Legislacao = anexos.Key.Legislacao
+                        });
+                    }
+
+                }
+                ultimoNcm = produto.CodigoNcm;
+                ultimoIndiceValido++;
+            }
+
+            return produtos;
+        }
+
+        private List<Nomenclatura> CarregarTabelaNcm()
+        {
+            var diretorioAtual = AppDomain.CurrentDomain.BaseDirectory;
+            var tabelaNcmJson = $"{diretorioAtual}\\Tabelas\\tabela_ncm.json";
+            var retono = JsonSerializer.Deserialize<NcmCamex>(File.ReadAllText(tabelaNcmJson), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return retono?.Nomenclaturas;
         }
     }
 }
