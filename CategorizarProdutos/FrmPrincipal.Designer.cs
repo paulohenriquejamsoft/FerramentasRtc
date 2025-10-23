@@ -44,7 +44,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtBanco = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnNaturezaTributacao = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -182,7 +182,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.btnNaturezaTributacao);
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(3, 12);
             this.groupBox2.Name = "groupBox2";
@@ -209,14 +209,15 @@
             this.label5.TabIndex = 7;
             this.label5.Text = "Banco";
             // 
-            // button1
+            // btnNaturezaTributacao
             // 
-            this.button1.Location = new System.Drawing.Point(10, 35);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(340, 41);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Naturezas x Tributação Fiscal (CBS/IBS)";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnNaturezaTributacao.Location = new System.Drawing.Point(10, 35);
+            this.btnNaturezaTributacao.Name = "btnNaturezaTributacao";
+            this.btnNaturezaTributacao.Size = new System.Drawing.Size(340, 41);
+            this.btnNaturezaTributacao.TabIndex = 0;
+            this.btnNaturezaTributacao.Text = "Naturezas x Tributação Fiscal (CBS/IBS)";
+            this.btnNaturezaTributacao.UseVisualStyleBackColor = true;
+            this.btnNaturezaTributacao.Click += new System.EventHandler(this.btnNaturezaTributacao_Click);
             // 
             // FrmPrincipal
             // 
@@ -261,7 +262,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox txtBanco;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnNaturezaTributacao;
     }
 }
 

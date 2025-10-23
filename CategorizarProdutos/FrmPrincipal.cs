@@ -2,6 +2,7 @@
 using System.Text;
 using System.Windows.Forms;
 using CategorizarProdutos.Dao;
+using CategorizarProdutos.Repositorios;
 
 namespace CategorizarProdutos
 {
@@ -61,6 +62,14 @@ namespace CategorizarProdutos
             {
                 MessageBox.Show("Erro ao conectar ao banco de dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnNaturezaTributacao_Click(object sender, EventArgs e)
+        {
+            using(var frm = new FrmNaturezaTributacao())
+            {
+                frm.ShowDialog();
+            }           
         }
     }
 }

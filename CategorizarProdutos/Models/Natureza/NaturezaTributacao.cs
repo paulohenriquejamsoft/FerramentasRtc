@@ -12,7 +12,7 @@ namespace CategorizarProdutos.Models.Natureza
         {
             get
             {
-                if (string.IsNullOrEmpty(Cfop))
+                if (string.IsNullOrWhiteSpace(Cfop))
                     return 0;
 
                 return Convert.ToInt32(Cfop.Replace(".", ""));
@@ -23,5 +23,7 @@ namespace CategorizarProdutos.Models.Natureza
         public string TribDescricao { get; set; }
         public string CstIbsCbs { get; set; }
         public string CclassTrib { get; set; }
+
+        public bool isSelecionado { get; set; }
     }
 }
