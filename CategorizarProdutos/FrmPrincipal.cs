@@ -10,6 +10,7 @@ using CategorizarProdutos.Dao;
 using CategorizarProdutos.Dto;
 using CategorizarProdutos.Models.Produtos;
 using CategorizarProdutos.Repositorios;
+using ClosedXML.Excel;
 
 namespace CategorizarProdutos
 {
@@ -87,23 +88,113 @@ namespace CategorizarProdutos
                 return;
             }
 
+            var produtos = produtosClassificados.Where(p => p.Anexos != null && p.Anexos.Count > 0).ToList();
 
-            //var fileDialog = new SaveFileDialog
-            //{
-            //    Filter = "Arquivo Excel (*.xlsx)|*.xlsx",
-            //    Title = "Salvar arquivo Excel"
-            //};
-            //fileDialog.ShowDialog();
+            var arquivoDestino = EscolherCaminhoArquivo();
+            if (string.IsNullOrWhiteSpace(arquivoDestino))
+            {
+                MessageBox.Show("Operação cancelada.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-            //var nomeArquivo = fileDialog.FileName;
-            //if (string.IsNullOrWhiteSpace(nomeArquivo))
-            //{
-            //    MessageBox.Show("Operação cancelada.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
+            GerarPlanilha(produtos, arquivoDestino);
 
 
-            //nomeArquivo = $"{nomeArquivo}.xlsx";          
+            MessageBox.Show("Planilha exportada com sucesso!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
+        private void GerarPlanilha(List<ProdutoClassificacao> produtos, string arquivo)
+        {
+            produtos = produtos.OrderBy(p => p.CodProd).ToList();
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Planilha1");
+            worksheet.Cell("A1").Value = "Código";
+            worksheet.Cell("B1").Value = "Produto";
+            worksheet.Cell("C1").Value = "Apelido";
+            worksheet.Cell("D1").Value = "Cod. Barra";
+            worksheet.Cell("E1").Value = "Ncm";
+
+            worksheet.Cell("F1").Value = "Anexo_1";
+            worksheet.Cell("G1").Value = "CST_1";
+            worksheet.Cell("H1").Value = "CclasTrib_1";
+
+            worksheet.Cell("I1").Value = "Anexo_2";
+            worksheet.Cell("J1").Value = "CST_2";
+            worksheet.Cell("K1").Value = "CclasTrib_2";
+
+            worksheet.Cell("L1").Value = "Anexo_3";
+            worksheet.Cell("M1").Value = "CST_3";
+            worksheet.Cell("N1").Value = "CclasTrib_3";
+
+            worksheet.Cell("O1").Value = "Anexo_4";
+            worksheet.Cell("P1").Value = "CST_4";
+            worksheet.Cell("Q1").Value = "CclasTrib_4";
+
+            var linha = 1;
+            foreach (var produtoClassificado in produtos)
+            {
+
+                linha++;
+                worksheet.Cell($"A{linha}").Value = produtoClassificado.CodProd;
+                worksheet.Cell($"B{linha}").Value = produtoClassificado.Produto;
+                worksheet.Cell($"C{linha}").Value = produtoClassificado.ApelidoProd;
+                worksheet.Cell($"D{linha}").Value = produtoClassificado.CodigoBarra;
+                worksheet.Cell($"E{linha}").Value = produtoClassificado.CodigoNcm;
+
+                var anexo = 1;
+                foreach (var infoAnexo in produtoClassificado.Anexos)
+                {
+                    if (anexo > 4)
+                        break;
+
+                    if (anexo == 1)
+                    {
+                        worksheet.Cell($"F{linha}").Value = infoAnexo.Anexo;
+                        worksheet.Cell($"G{linha}").Value = infoAnexo.Cst;
+                        worksheet.Cell($"H{linha}").Value = infoAnexo.CclassTrib;
+                    }
+                    else if (anexo == 2)
+                    {
+                        worksheet.Cell($"I{linha}").Value = infoAnexo.Anexo;
+                        worksheet.Cell($"J{linha}").Value = infoAnexo.Cst;
+                        worksheet.Cell($"K{linha}").Value = infoAnexo.CclassTrib;
+                    }
+                    else if (anexo == 3)
+                    {
+                        worksheet.Cell($"L{linha}").Value = infoAnexo.Anexo;
+                        worksheet.Cell($"M{linha}").Value = infoAnexo.Cst;
+                        worksheet.Cell($"N{linha}").Value = infoAnexo.CclassTrib;
+                    }
+                    else
+                    {
+                        worksheet.Cell($"O{linha}").Value = infoAnexo.Anexo;
+                        worksheet.Cell($"P{linha}").Value = infoAnexo.Cst;
+                        worksheet.Cell($"Q{linha}").Value = infoAnexo.CclassTrib;
+                    }
+
+                    anexo++;
+                }
+
+            }
+            workbook.SaveAs(arquivo);
+        }
+
+        private string EscolherCaminhoArquivo()
+        {
+            var fileDialog = new SaveFileDialog
+            {
+                Filter = "Arquivo Excel (*.xlsx)|*.xlsx",
+                Title = "Salvar arquivo Excel"
+            };
+            fileDialog.ShowDialog();
+
+            var nomeArquivo = fileDialog.FileName;
+            if (string.IsNullOrWhiteSpace(nomeArquivo))
+                return string.Empty;
+
+
+            return nomeArquivo = $"{nomeArquivo}.xlsx";
         }
 
         private async Task<List<ProdutoClassificacao>> ClassificarProdutos()
@@ -152,7 +243,7 @@ namespace CategorizarProdutos
                 var anexosEncontrados = ncmsTabela
                     .Where(n => posibilidades.Contains(n.CodigoProxy))
                     .SelectMany(n => n.Anexos)
-                    .GroupBy(g => new { g.CclasTrib, g.Cst, g.Anexo, g.Legislacao })
+                    .GroupBy(g => new { g.CclassTrib, g.Cst, g.Anexo, g.Legislacao })
                     .ToList();
 
                 if (anexosEncontrados.Count > 0)
@@ -162,7 +253,7 @@ namespace CategorizarProdutos
 
                         produto.Anexos.Add(new InformacaoAnexo
                         {
-                            CclasTrib = anexos.Key.CclasTrib,
+                            CclassTrib = anexos.Key.CclassTrib,
                             Cst = anexos.Key.Cst,
                             Anexo = anexos.Key.Anexo,
                             Legislacao = anexos.Key.Legislacao

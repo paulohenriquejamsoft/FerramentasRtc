@@ -40,7 +40,7 @@ namespace CategorizarProdutos.Dto
         public string Legislacao { get; set; } = string.Empty;
         public string Anexo { get; set; } = string.Empty;
         public string Cst { get; set; } = string.Empty;
-        public string CclasTrib { get; set; } = string.Empty;
+        public string CclassTrib { get; set; } = string.Empty;
     }
 
     public class UtcDateTimeConverter : JsonConverter<object>

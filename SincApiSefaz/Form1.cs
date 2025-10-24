@@ -129,7 +129,7 @@ namespace SincApiSefaz
                     var anexosEncontrados = nomenclaturas
                         .Where(n => posibilidades.Contains(n.CodigoProxy))
                         .SelectMany(n => n.Anexos)
-                        .GroupBy(g => new { g.CclasTrib, g.Cst, g.Anexo, g.Legislacao })
+                        .GroupBy(g => new { g.CclassTrib, g.Cst, g.Anexo, g.Legislacao })
                         .ToList();
 
                     if (anexosEncontrados.Count > 0)
@@ -139,7 +139,7 @@ namespace SincApiSefaz
 
                             produto.Anexos.Add(new InformacaoAnexo
                             {
-                                CclasTrib = anexos.Key.CclasTrib,
+                                CclassTrib = anexos.Key.CclassTrib,
                                 Cst = anexos.Key.Cst,
                                 Anexo = anexos.Key.Anexo,
                                 Legislacao = anexos.Key.Legislacao
@@ -205,25 +205,25 @@ namespace SincApiSefaz
                     {
                         worksheet.Cell($"F{linha}").Value = infoAnexo.Anexo;
                         worksheet.Cell($"G{linha}").Value = infoAnexo.Cst;
-                        worksheet.Cell($"H{linha}").Value = infoAnexo.CclasTrib;
+                        worksheet.Cell($"H{linha}").Value = infoAnexo.CclassTrib;
                     }
                     else if (anexo == 2)
                     {
                         worksheet.Cell($"I{linha}").Value = infoAnexo.Anexo;
                         worksheet.Cell($"J{linha}").Value = infoAnexo.Cst;
-                        worksheet.Cell($"K{linha}").Value = infoAnexo.CclasTrib;
+                        worksheet.Cell($"K{linha}").Value = infoAnexo.CclassTrib;
                     }
                     else if (anexo == 3)
                     {
                         worksheet.Cell($"I{linha}").Value = infoAnexo.Anexo;
                         worksheet.Cell($"J{linha}").Value = infoAnexo.Cst;
-                        worksheet.Cell($"K{linha}").Value = infoAnexo.CclasTrib;
+                        worksheet.Cell($"K{linha}").Value = infoAnexo.CclassTrib;
                     }
                     else
                     {
                         worksheet.Cell($"O{linha}").Value = infoAnexo.Anexo;
                         worksheet.Cell($"P{linha}").Value = infoAnexo.Cst;
-                        worksheet.Cell($"Q{linha}").Value = infoAnexo.CclasTrib;
+                        worksheet.Cell($"Q{linha}").Value = infoAnexo.CclassTrib;
                     }
 
                     anexo++;
