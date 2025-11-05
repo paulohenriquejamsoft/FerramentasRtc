@@ -1,11 +1,12 @@
-using System.Text.Json;
-using System.Windows.Forms;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Math;
+using Microsoft.Win32;
 using SincApiSefaz.Dto;
 using SincApiSefaz.Models.TabNcm;
 using SincApiSefaz.Repositorios;
 using SincApiSefaz.Servicos;
+using System.Text.Json;
+using System.Windows.Forms;
 
 namespace SincApiSefaz
 {
@@ -56,10 +57,18 @@ namespace SincApiSefaz
         {
             try
             {
-                var caminhoArquivo = "C:\\Users\\phs\\Downloads\\CST_cClassTrib_2025-10-03_Public_verde.xlsx";
+                var caminhoArquivo = "C:\\Users\\PauloHenrique\\Downloads\\CST_cClassTrib_2025-10-03_Public_verde.xlsx";
 
                 var excelInstance = new ImportacaoTabClassTrib();
                 var (csts, classificacoes) = excelInstance.ExtrairDados(caminhoArquivo);
+
+                // Exportar CST CTE
+                //var classCtes = classificacoes.Where(x => x.IndCte).ToList();
+
+                //var ctsCtes = csts.Where(x => classCtes.Any(c => c.CstIbsCbs == x.CstIbsCbs)).ToList();
+
+                //var planilha = JsonSerializer.Serialize(ctsCtes);
+                //System.IO.File.WriteAllText("tabela_cst_cte.json", planilha, System.Text.Encoding.UTF8);
 
                 await excelInstance.AtualizarCstsBanco(csts);
                 await excelInstance.AtualizarCClassificacoesBanco(classificacoes);
