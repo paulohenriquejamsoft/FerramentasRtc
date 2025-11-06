@@ -144,6 +144,7 @@
             this.txtSenha.PasswordChar = '*';
             this.txtSenha.Size = new System.Drawing.Size(202, 25);
             this.txtSenha.TabIndex = 5;
+            this.txtSenha.Text = "#j@msoft1310*";
             // 
             // label4
             // 
@@ -213,11 +214,11 @@
             // 
             // btnExportarProdComAnexo
             // 
-            this.btnExportarProdComAnexo.Location = new System.Drawing.Point(10, 82);
+            this.btnExportarProdComAnexo.Location = new System.Drawing.Point(309, 35);
             this.btnExportarProdComAnexo.Name = "btnExportarProdComAnexo";
-            this.btnExportarProdComAnexo.Size = new System.Drawing.Size(293, 41);
+            this.btnExportarProdComAnexo.Size = new System.Drawing.Size(156, 41);
             this.btnExportarProdComAnexo.TabIndex = 1;
-            this.btnExportarProdComAnexo.Text = "Exportar Produtos Com Anexo";
+            this.btnExportarProdComAnexo.Text = "Exportar Produtos";
             this.btnExportarProdComAnexo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnExportarProdComAnexo.UseVisualStyleBackColor = true;
             this.btnExportarProdComAnexo.Click += new System.EventHandler(this.btnExportarProdComAnexo_Click);
