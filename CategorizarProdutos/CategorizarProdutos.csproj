@@ -221,6 +221,7 @@
     <Compile Include="Models\Empresa\DadosEmpresa.cs" />
     <Compile Include="Models\Natureza\NaturezaTributacao.cs" />
     <Compile Include="Models\Produtos\ProdutoClassificacao.cs" />
+    <Compile Include="Dto\ProdutosClassificados.cs" />
     <Compile Include="Models\TributacoesFiscal\TributacaoFiscal.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
