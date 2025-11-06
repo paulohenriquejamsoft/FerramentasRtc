@@ -31,7 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal));
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtBanco = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnConectar = new System.Windows.Forms.Button();
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtUsuario = new System.Windows.Forms.TextBox();
@@ -40,22 +44,19 @@
             this.label2 = new System.Windows.Forms.Label();
             this.pnFerramentas = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.txtBanco = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btnNaturezaTributacao = new System.Windows.Forms.Button();
-            this.btnConectar = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnExportarProdComAnexo = new System.Windows.Forms.Button();
+            this.btnNaturezaTributacao = new System.Windows.Forms.Button();
+            this.lblVersao = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.pnFerramentas.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(114)))), ((int)(((byte)(85)))));
+            this.panel1.BackColor = System.Drawing.Color.Red;
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -74,6 +75,16 @@
             this.label1.Size = new System.Drawing.Size(242, 25);
             this.label1.TabIndex = 1;
             this.label1.Text = "Categorização de CBS/IBS";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::CategorizarProdutos.Properties.Resources.jamsoft;
+            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(88, 41);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // groupBox1
             // 
@@ -94,6 +105,38 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Dados de Conexão";
             // 
+            // txtBanco
+            // 
+            this.txtBanco.Location = new System.Drawing.Point(10, 103);
+            this.txtBanco.Name = "txtBanco";
+            this.txtBanco.Size = new System.Drawing.Size(202, 25);
+            this.txtBanco.TabIndex = 8;
+            this.txtBanco.Text = "Varejo";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(10, 80);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(46, 19);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Banco";
+            // 
+            // btnConectar
+            // 
+            this.btnConectar.BackColor = System.Drawing.Color.Red;
+            this.btnConectar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnConectar.Image = global::CategorizarProdutos.Properties.Resources.Disconnected;
+            this.btnConectar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnConectar.Location = new System.Drawing.Point(247, 92);
+            this.btnConectar.Name = "btnConectar";
+            this.btnConectar.Size = new System.Drawing.Size(152, 36);
+            this.btnConectar.TabIndex = 6;
+            this.btnConectar.Text = "Conectar";
+            this.btnConectar.UseVisualStyleBackColor = false;
+            this.btnConectar.Click += new System.EventHandler(this.btnConectar_Click);
+            // 
             // txtSenha
             // 
             this.txtSenha.Location = new System.Drawing.Point(484, 48);
@@ -101,7 +144,6 @@
             this.txtSenha.PasswordChar = '*';
             this.txtSenha.Size = new System.Drawing.Size(202, 25);
             this.txtSenha.TabIndex = 5;
-            this.txtSenha.Text = "#j@msoft1310*";
             // 
             // label4
             // 
@@ -169,23 +211,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Ferramentas";
             // 
-            // txtBanco
+            // btnExportarProdComAnexo
             // 
-            this.txtBanco.Location = new System.Drawing.Point(10, 103);
-            this.txtBanco.Name = "txtBanco";
-            this.txtBanco.Size = new System.Drawing.Size(202, 25);
-            this.txtBanco.TabIndex = 8;
-            this.txtBanco.Text = "Varejo";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(10, 80);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(46, 19);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "Banco";
+            this.btnExportarProdComAnexo.Location = new System.Drawing.Point(10, 82);
+            this.btnExportarProdComAnexo.Name = "btnExportarProdComAnexo";
+            this.btnExportarProdComAnexo.Size = new System.Drawing.Size(293, 41);
+            this.btnExportarProdComAnexo.TabIndex = 1;
+            this.btnExportarProdComAnexo.Text = "Exportar Produtos Com Anexo";
+            this.btnExportarProdComAnexo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnExportarProdComAnexo.UseVisualStyleBackColor = true;
+            this.btnExportarProdComAnexo.Click += new System.EventHandler(this.btnExportarProdComAnexo_Click);
             // 
             // btnNaturezaTributacao
             // 
@@ -198,46 +233,23 @@
             this.btnNaturezaTributacao.UseVisualStyleBackColor = true;
             this.btnNaturezaTributacao.Click += new System.EventHandler(this.btnNaturezaTributacao_Click);
             // 
-            // btnConectar
+            // lblVersao
             // 
-            this.btnConectar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(114)))), ((int)(((byte)(85)))));
-            this.btnConectar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnConectar.Image = global::CategorizarProdutos.Properties.Resources.Disconnected;
-            this.btnConectar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnConectar.Location = new System.Drawing.Point(247, 92);
-            this.btnConectar.Name = "btnConectar";
-            this.btnConectar.Size = new System.Drawing.Size(152, 36);
-            this.btnConectar.TabIndex = 6;
-            this.btnConectar.Text = "Conectar";
-            this.btnConectar.UseVisualStyleBackColor = false;
-            this.btnConectar.Click += new System.EventHandler(this.btnConectar_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::CategorizarProdutos.Properties.Resources.jamsoft;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(88, 41);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
-            // btnExportarProdComAnexo
-            // 
-            this.btnExportarProdComAnexo.Location = new System.Drawing.Point(10, 82);
-            this.btnExportarProdComAnexo.Name = "btnExportarProdComAnexo";
-            this.btnExportarProdComAnexo.Size = new System.Drawing.Size(293, 41);
-            this.btnExportarProdComAnexo.TabIndex = 1;
-            this.btnExportarProdComAnexo.Text = "Exportar Produtos Com Anexo";
-            this.btnExportarProdComAnexo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExportarProdComAnexo.UseVisualStyleBackColor = true;
-            this.btnExportarProdComAnexo.Click += new System.EventHandler(this.btnExportarProdComAnexo_Click);
+            this.lblVersao.AutoSize = true;
+            this.lblVersao.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersao.ForeColor = System.Drawing.Color.Red;
+            this.lblVersao.Location = new System.Drawing.Point(3, 396);
+            this.lblVersao.Name = "lblVersao";
+            this.lblVersao.Size = new System.Drawing.Size(87, 15);
+            this.lblVersao.TabIndex = 3;
+            this.lblVersao.Text = "Versão: 0.0.0.0";
             // 
             // FrmPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(695, 420);
+            this.Controls.Add(this.lblVersao);
             this.Controls.Add(this.pnFerramentas);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
@@ -250,12 +262,13 @@
             this.Load += new System.EventHandler(this.FrmPrincipal_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.pnFerramentas.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -278,6 +291,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnNaturezaTributacao;
         private System.Windows.Forms.Button btnExportarProdComAnexo;
+        private System.Windows.Forms.Label lblVersao;
     }
 }
 

@@ -24,6 +24,8 @@ namespace CategorizarProdutos
         private void FrmPrincipal_Load(object sender, EventArgs e)
         {
             pnFerramentas.Enabled = false;
+
+            lblVersao.Text = $"Versão: {Application.ProductVersion}";
         }
 
         private void btnConectar_Click(object sender, EventArgs e)
