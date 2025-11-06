@@ -33,16 +33,19 @@
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rdTempComeSemAnexoeClassifPadrao = new System.Windows.Forms.RadioButton();
-            this.rdTempProdSemClassificacao = new System.Windows.Forms.RadioButton();
-            this.rdTempComeSemAnexo = new System.Windows.Forms.RadioButton();
-            this.rdTempProdComAnexo = new System.Windows.Forms.RadioButton();
+            this.rdTempComClassifPadrao = new System.Windows.Forms.RadioButton();
+            this.rdTempSemClassificacao = new System.Windows.Forms.RadioButton();
+            this.rdTempPadrao = new System.Windows.Forms.RadioButton();
             this.btnExportar = new System.Windows.Forms.Button();
             this.cbEmpresa = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rdProdAmbos = new System.Windows.Forms.RadioButton();
+            this.rdProdSomenteComAnexo = new System.Windows.Forms.RadioButton();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -54,7 +57,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(800, 47);
+            this.panel1.Size = new System.Drawing.Size(509, 47);
             this.panel1.TabIndex = 3;
             // 
             // btnFechar
@@ -63,7 +66,7 @@
             this.btnFechar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnFechar.FlatAppearance.BorderSize = 0;
             this.btnFechar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFechar.Location = new System.Drawing.Point(766, 10);
+            this.btnFechar.Location = new System.Drawing.Point(470, 10);
             this.btnFechar.Name = "btnFechar";
             this.btnFechar.Size = new System.Drawing.Size(27, 28);
             this.btnFechar.TabIndex = 2;
@@ -75,7 +78,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(292, 11);
+            this.label1.Location = new System.Drawing.Point(183, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(179, 25);
             this.label1.TabIndex = 1;
@@ -94,61 +97,49 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.groupBox1.Controls.Add(this.rdTempComeSemAnexoeClassifPadrao);
-            this.groupBox1.Controls.Add(this.rdTempProdSemClassificacao);
-            this.groupBox1.Controls.Add(this.rdTempComeSemAnexo);
-            this.groupBox1.Controls.Add(this.rdTempProdComAnexo);
+            this.groupBox1.Controls.Add(this.rdTempComClassifPadrao);
+            this.groupBox1.Controls.Add(this.rdTempSemClassificacao);
+            this.groupBox1.Controls.Add(this.rdTempPadrao);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 118);
+            this.groupBox1.Location = new System.Drawing.Point(231, 120);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(485, 96);
+            this.groupBox1.Size = new System.Drawing.Size(266, 120);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Template";
             // 
-            // rdTempComeSemAnexoeClassifPadrao
+            // rdTempComClassifPadrao
             // 
-            this.rdTempComeSemAnexoeClassifPadrao.AutoSize = true;
-            this.rdTempComeSemAnexoeClassifPadrao.Location = new System.Drawing.Point(4, 54);
-            this.rdTempComeSemAnexoeClassifPadrao.Name = "rdTempComeSemAnexoeClassifPadrao";
-            this.rdTempComeSemAnexoeClassifPadrao.Size = new System.Drawing.Size(270, 23);
-            this.rdTempComeSemAnexoeClassifPadrao.TabIndex = 3;
-            this.rdTempComeSemAnexoeClassifPadrao.Text = "Com e Sem Anexo +  Classif. Padrão";
-            this.rdTempComeSemAnexoeClassifPadrao.UseVisualStyleBackColor = true;
+            this.rdTempComClassifPadrao.AutoSize = true;
+            this.rdTempComClassifPadrao.Location = new System.Drawing.Point(7, 55);
+            this.rdTempComClassifPadrao.Name = "rdTempComClassifPadrao";
+            this.rdTempComClassifPadrao.Size = new System.Drawing.Size(160, 23);
+            this.rdTempComClassifPadrao.TabIndex = 3;
+            this.rdTempComClassifPadrao.Text = "Com Classif. Padrão";
+            this.rdTempComClassifPadrao.UseVisualStyleBackColor = true;
             // 
-            // rdTempProdSemClassificacao
+            // rdTempSemClassificacao
             // 
-            this.rdTempProdSemClassificacao.AutoSize = true;
-            this.rdTempProdSemClassificacao.Location = new System.Drawing.Point(285, 54);
-            this.rdTempProdSemClassificacao.Name = "rdTempProdSemClassificacao";
-            this.rdTempProdSemClassificacao.Size = new System.Drawing.Size(127, 23);
-            this.rdTempProdSemClassificacao.TabIndex = 2;
-            this.rdTempProdSemClassificacao.TabStop = true;
-            this.rdTempProdSemClassificacao.Text = "Sem Classificar";
-            this.rdTempProdSemClassificacao.UseVisualStyleBackColor = true;
+            this.rdTempSemClassificacao.AutoSize = true;
+            this.rdTempSemClassificacao.Location = new System.Drawing.Point(6, 84);
+            this.rdTempSemClassificacao.Name = "rdTempSemClassificacao";
+            this.rdTempSemClassificacao.Size = new System.Drawing.Size(127, 23);
+            this.rdTempSemClassificacao.TabIndex = 2;
+            this.rdTempSemClassificacao.TabStop = true;
+            this.rdTempSemClassificacao.Text = "Sem Classificar";
+            this.rdTempSemClassificacao.UseVisualStyleBackColor = true;
             // 
-            // rdTempComeSemAnexo
+            // rdTempPadrao
             // 
-            this.rdTempComeSemAnexo.AutoSize = true;
-            this.rdTempComeSemAnexo.Location = new System.Drawing.Point(285, 25);
-            this.rdTempComeSemAnexo.Name = "rdTempComeSemAnexo";
-            this.rdTempComeSemAnexo.Size = new System.Drawing.Size(156, 23);
-            this.rdTempComeSemAnexo.TabIndex = 1;
-            this.rdTempComeSemAnexo.TabStop = true;
-            this.rdTempComeSemAnexo.Text = "Com e Sem Anexos";
-            this.rdTempComeSemAnexo.UseVisualStyleBackColor = true;
-            // 
-            // rdTempProdComAnexo
-            // 
-            this.rdTempProdComAnexo.AutoSize = true;
-            this.rdTempProdComAnexo.Checked = true;
-            this.rdTempProdComAnexo.Location = new System.Drawing.Point(7, 25);
-            this.rdTempProdComAnexo.Name = "rdTempProdComAnexo";
-            this.rdTempProdComAnexo.Size = new System.Drawing.Size(172, 23);
-            this.rdTempProdComAnexo.TabIndex = 0;
-            this.rdTempProdComAnexo.TabStop = true;
-            this.rdTempProdComAnexo.Text = "Somente com Anexos";
-            this.rdTempProdComAnexo.UseVisualStyleBackColor = true;
+            this.rdTempPadrao.AutoSize = true;
+            this.rdTempPadrao.Checked = true;
+            this.rdTempPadrao.Location = new System.Drawing.Point(7, 26);
+            this.rdTempPadrao.Name = "rdTempPadrao";
+            this.rdTempPadrao.Size = new System.Drawing.Size(76, 23);
+            this.rdTempPadrao.TabIndex = 0;
+            this.rdTempPadrao.TabStop = true;
+            this.rdTempPadrao.Text = "Padrão";
+            this.rdTempPadrao.UseVisualStyleBackColor = true;
             // 
             // btnExportar
             // 
@@ -156,7 +147,7 @@
             this.btnExportar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExportar.Image = global::CategorizarProdutos.Properties.Resources.Synchronize;
             this.btnExportar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnExportar.Location = new System.Drawing.Point(552, 118);
+            this.btnExportar.Location = new System.Drawing.Point(175, 262);
             this.btnExportar.Name = "btnExportar";
             this.btnExportar.Size = new System.Drawing.Size(158, 42);
             this.btnExportar.TabIndex = 10;
@@ -184,11 +175,47 @@
             this.label2.TabIndex = 8;
             this.label2.Text = "Empresa";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.groupBox2.Controls.Add(this.rdProdAmbos);
+            this.groupBox2.Controls.Add(this.rdProdSomenteComAnexo);
+            this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Location = new System.Drawing.Point(12, 120);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(204, 120);
+            this.groupBox2.TabIndex = 5;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Produtos";
+            // 
+            // rdProdAmbos
+            // 
+            this.rdProdAmbos.AutoSize = true;
+            this.rdProdAmbos.Checked = true;
+            this.rdProdAmbos.Location = new System.Drawing.Point(6, 26);
+            this.rdProdAmbos.Name = "rdProdAmbos";
+            this.rdProdAmbos.Size = new System.Drawing.Size(156, 23);
+            this.rdProdAmbos.TabIndex = 1;
+            this.rdProdAmbos.TabStop = true;
+            this.rdProdAmbos.Text = "Com e Sem Anexos";
+            this.rdProdAmbos.UseVisualStyleBackColor = true;
+            // 
+            // rdProdSomenteComAnexo
+            // 
+            this.rdProdSomenteComAnexo.AutoSize = true;
+            this.rdProdSomenteComAnexo.Location = new System.Drawing.Point(6, 55);
+            this.rdProdSomenteComAnexo.Name = "rdProdSomenteComAnexo";
+            this.rdProdSomenteComAnexo.Size = new System.Drawing.Size(172, 23);
+            this.rdProdSomenteComAnexo.TabIndex = 0;
+            this.rdProdSomenteComAnexo.Text = "Somente com Anexos";
+            this.rdProdSomenteComAnexo.UseVisualStyleBackColor = true;
+            // 
             // FrmExportarProdutos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 226);
+            this.ClientSize = new System.Drawing.Size(509, 321);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnExportar);
             this.Controls.Add(this.cbEmpresa);
             this.Controls.Add(this.label2);
@@ -203,6 +230,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -218,9 +247,11 @@
         private System.Windows.Forms.Button btnExportar;
         private System.Windows.Forms.ComboBox cbEmpresa;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.RadioButton rdTempProdComAnexo;
-        private System.Windows.Forms.RadioButton rdTempComeSemAnexo;
-        private System.Windows.Forms.RadioButton rdTempProdSemClassificacao;
-        private System.Windows.Forms.RadioButton rdTempComeSemAnexoeClassifPadrao;
+        private System.Windows.Forms.RadioButton rdTempPadrao;
+        private System.Windows.Forms.RadioButton rdTempSemClassificacao;
+        private System.Windows.Forms.RadioButton rdTempComClassifPadrao;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton rdProdAmbos;
+        private System.Windows.Forms.RadioButton rdProdSomenteComAnexo;
     }
 }

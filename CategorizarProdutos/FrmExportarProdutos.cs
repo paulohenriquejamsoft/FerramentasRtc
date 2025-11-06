@@ -70,43 +70,15 @@ namespace CategorizarProdutos
                     return;
                 }
 
-                List<LayoutTabela> colunas;
-                if (rdTempProdComAnexo.Checked)
-                {                    
+                if (rdProdSomenteComAnexo.Checked)
+                {
                     produtosClassificados = produtosClassificados
                                             .Where(p => p.Anexos != null && p.Anexos.Count > 0)
                                             .ToList();
-
-                    if (produtosClassificados == null || produtosClassificados.Count == 0)
-                    {
-                        MessageBox.Show("Não existe produtos com anexo.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        btnExportar.Enabled = true;
-                        return;
-                    }
-
-                    colunas = new List<LayoutTabela>
-                           {
-                               new LayoutTabela("A", "CNPJ", "CnpjEmpresa"),
-                               new LayoutTabela("B", "Código do Produto", "CodProd"),
-                               new LayoutTabela("C", "GTIN", "CodigoBarra"),
-                               new LayoutTabela("D", "NCM", "CodigoNcm"),
-                               new LayoutTabela("E", "Descrição", "Produto"),
-                               new LayoutTabela("F", "Apelido", "ApelidoProd"),                               
-                               new LayoutTabela("G", "CST_1", "Cst2"),
-                               new LayoutTabela("H", "cClasTrib_1", "ClassTrib2"),
-                               new LayoutTabela("I", "Anexo_1", "Anexo2"),
-                               new LayoutTabela("J", "CST_2", "Cst3"),
-                               new LayoutTabela("K", "cClasTrib_2", "ClassTrib3"),
-                               new LayoutTabela("L", "Anexo_2", "Anexo3"),
-                               new LayoutTabela("M", "CST_3", "Cst4"),
-                               new LayoutTabela("N", "cClasTrib_3", "ClassTrib4"),
-                               new LayoutTabela("O", "Anexo_3", "Anexo4"),
-                               new LayoutTabela("P", "CST_4", "Cst5"),
-                               new LayoutTabela("Q", "cClasTrib_4", "ClassTrib5"),
-                               new LayoutTabela("R", "Anexo_4", "Anexo5"),
-                           };
                 }
-                else if (rdTempComeSemAnexo.Checked)
+
+                List<LayoutTabela> colunas;
+                if (rdTempPadrao.Checked)
                 {
                     colunas = new List<LayoutTabela>
                            {
@@ -116,21 +88,21 @@ namespace CategorizarProdutos
                                new LayoutTabela("D", "NCM", "CodigoNcm"),
                                new LayoutTabela("E", "Descrição", "Produto"),
                                new LayoutTabela("F", "Apelido", "ApelidoProd"),
-                               new LayoutTabela("G", "CST_1", "Cst2"),
-                               new LayoutTabela("H", "cClasTrib_1", "ClassTrib2"),
-                               new LayoutTabela("I", "Anexo_1", "Anexo2"),
-                               new LayoutTabela("J", "CST_2", "Cst3"),
-                               new LayoutTabela("K", "cClasTrib_2", "ClassTrib3"),
-                               new LayoutTabela("L", "Anexo_2", "Anexo3"),
-                               new LayoutTabela("M", "CST_3", "Cst4"),
-                               new LayoutTabela("N", "cClasTrib_3", "ClassTrib4"),
-                               new LayoutTabela("O", "Anexo_3", "Anexo4"),
-                               new LayoutTabela("P", "CST_4", "Cst5"),
-                               new LayoutTabela("Q", "cClasTrib_4", "ClassTrib5"),
-                               new LayoutTabela("R", "Anexo_4", "Anexo5"),
+                               new LayoutTabela("G", "CST_1", "Cst1"),
+                               new LayoutTabela("H", "cClasTrib_1", "ClassTrib1"),
+                               new LayoutTabela("I", "Anexo_1", "Anexo1"),
+                               new LayoutTabela("J", "CST_2", "Cst2"),
+                               new LayoutTabela("K", "cClasTrib_2", "ClassTrib2"),
+                               new LayoutTabela("L", "Anexo_2", "Anexo2"),
+                               new LayoutTabela("M", "CST_3", "Cst3"),
+                               new LayoutTabela("N", "cClasTrib_3", "ClassTrib3"),
+                               new LayoutTabela("O", "Anexo_3", "Anexo3"),
+                               new LayoutTabela("P", "CST_4", "Cst4"),
+                               new LayoutTabela("Q", "cClasTrib_4", "ClassTrib4"),
+                               new LayoutTabela("R", "Anexo_4", "Anexo4"),
                            };
                 }
-                else if (rdTempProdSemClassificacao.Checked)
+                else if (rdTempSemClassificacao.Checked)
                 {
                     colunas = new List<LayoutTabela>
                            {
@@ -141,7 +113,7 @@ namespace CategorizarProdutos
                                new LayoutTabela("E", "Descrição", "Produto"),
                                new LayoutTabela("F", "Apelido", "ApelidoProd"),
                                new LayoutTabela("G", "CST", ""),
-                               new LayoutTabela("H", "cClasTrib", ""),                              
+                               new LayoutTabela("H", "cClasTrib", ""),
                     };
                 }
                 else
@@ -154,20 +126,18 @@ namespace CategorizarProdutos
                                new LayoutTabela("D", "NCM", "CodigoNcm"),
                                new LayoutTabela("E", "Descrição", "Produto"),
                                new LayoutTabela("F", "Apelido", "ApelidoProd"),
-                               new LayoutTabela("G", "CST Padrão", "CstPadrao"),
-                               new LayoutTabela("H", "cClasTrib Padrão", "CclasTribPadrao"),
-                               new LayoutTabela("I", "CST_2", "Cst2"),
-                               new LayoutTabela("J", "cClasTrib_2", "ClassTrib2"),
-                               new LayoutTabela("K", "Anexo_2", "Anexo2"),
-                               new LayoutTabela("L", "CST_3", "Cst3"),
-                               new LayoutTabela("M", "cClasTrib_3", "ClassTrib3"),
-                               new LayoutTabela("N", "Anexo_3", "Anexo3"),
-                               new LayoutTabela("O", "CST_4", "Cst4"),
-                               new LayoutTabela("P", "cClasTrib_4", "ClassTrib4"),
-                               new LayoutTabela("Q", "Anexo_4", "Anexo4"),
-                               new LayoutTabela("R", "CST_5", "Cst5"),
-                               new LayoutTabela("S", "cClasTrib_5", "ClassTrib5"),
-                               new LayoutTabela("T", "Anexo_5", "Anexo5"),
+                               new LayoutTabela("G", "CST_1", "Cst1"),
+                               new LayoutTabela("H", "cClasTrib_1", "ClassTrib1"),
+                               new LayoutTabela("I", "Anexo_1", "Anexo1"),
+                               new LayoutTabela("J", "CST_2", "Cst2"),
+                               new LayoutTabela("K", "cClasTrib_2", "ClassTrib2"),
+                               new LayoutTabela("L", "Anexo_2", "Anexo2"),
+                               new LayoutTabela("M", "CST_3", "Cst3"),
+                               new LayoutTabela("N", "cClasTrib_3", "ClassTrib3"),
+                               new LayoutTabela("O", "Anexo_3", "Anexo3"),
+                               new LayoutTabela("P", "CST_4", "Cst4"),
+                               new LayoutTabela("Q", "cClasTrib_4", "ClassTrib4"),
+                               new LayoutTabela("R", "Anexo_4", "Anexo4")
                            };
                 }
 
@@ -187,8 +157,11 @@ namespace CategorizarProdutos
 
                     var cnpjEmpresa = cbEmpresa.SelectedValue?.ToString() ?? "00000000000000";
 
-                    produtosClassificados = produtosClassificados.OrderBy(p => p.CodProd).ToList();                   
-                    var produtosClassificado = new ProdutosClassificados().Converter(produtosClassificados, cnpjEmpresa);
+                    produtosClassificados = produtosClassificados.OrderBy(p => p.CodProd).ToList();
+                    var produtosClassificado = new ProdutosClassificados()
+                                                .Converter(produtosClassificados, 
+                                                        cnpjEmpresa, 
+                                                        rdTempComClassifPadrao.Checked);
 
                     GerarPlanilha(colunas, produtosClassificado, arquivoDestino);
 
@@ -322,8 +295,10 @@ namespace CategorizarProdutos
             if (string.IsNullOrWhiteSpace(nomeArquivo))
                 return string.Empty;
 
-            nomeArquivo = nomeArquivo.ToLower().Replace(".xls", string.Empty)
-                          .Replace(".xlsx", string.Empty);
+            nomeArquivo = nomeArquivo
+                            .ToLower()                            
+                            .Replace(".xlsx", string.Empty)
+                            .Replace(".xls", string.Empty);
 
             return nomeArquivo = $"{nomeArquivo}.xlsx";
         }
