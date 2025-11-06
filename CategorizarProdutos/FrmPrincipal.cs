@@ -72,7 +72,7 @@ namespace CategorizarProdutos
             }
         }
 
-        private async void btnExportarProdComAnexo_Click(object sender, EventArgs e)
+        private void btnExportarProdComAnexo_Click(object sender, EventArgs e)
         {
             using (var frmProdutos = new FrmExportarProdutos())
             {
