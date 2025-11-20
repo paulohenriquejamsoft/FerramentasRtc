@@ -1,26 +1,24 @@
-﻿using System;
+﻿using CategorizarProdutos.Dao;
+using CategorizarProdutos.Models.Natureza;
+using CategorizarProdutos.Models.OperacoesFiscais;
+using CategorizarProdutos.Repositorios;
+using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CategorizarProdutos.Dao;
-using CategorizarProdutos.Models.Natureza;
-using CategorizarProdutos.Models.TributacoesFiscal;
-using CategorizarProdutos.Repositorios;
-using Dapper;
 
 namespace CategorizarProdutos
 {
     public partial class FrmNaturezaTributacao : Form
     {
-        private CheckBox headerCheckBox = new CheckBox();
-        private List<TributacaoFiscal> _tributacoes;     
+        private CheckBox headerCheckBox = new CheckBox();        
         public FrmNaturezaTributacao()
         {
-            InitializeComponent();
-            _tributacoes = new List<TributacaoFiscal>();
+            InitializeComponent();            
         }
 
         private void btnFechar_Click(object sender, EventArgs e)
@@ -48,12 +46,12 @@ namespace CategorizarProdutos
 
         public async Task PreencherComboTributacao()
         {
-            _tributacoes = await new TributacaoFiscalRepository().ObterTodas();
+            var operacoes = await new OperacaoFiscalRepository().ObterRegistros();
 
-            cbTributacoes.DataSource = _tributacoes;
-            cbTributacoes.ValueMember = nameof(TributacaoFiscal.Id);
-            cbTributacoes.DisplayMember = nameof(TributacaoFiscal.DescricaoCombo);
-            if (_tributacoes.Count > 0)
+            cbTributacoes.DataSource = operacoes;
+            cbTributacoes.ValueMember = nameof(OperacaoFiscal.Id);
+            cbTributacoes.DisplayMember = nameof(OperacaoFiscal.DescricaoCombo);
+            if (operacoes.Count > 0)
                 cbTributacoes.SelectedIndex = 0;
         }
 
@@ -92,17 +90,17 @@ namespace CategorizarProdutos
 
             dtGridNaturezas.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = nameof(NaturezaTributacao.TribId),
-                HeaderText = "Cod. Tributação",
-                DataPropertyName = nameof(NaturezaTributacao.TribId),
+                Name = nameof(NaturezaTributacao.OpId),
+                HeaderText = "Cod. Operação",
+                DataPropertyName = nameof(NaturezaTributacao.OpId),
                 Width = 70
             });
 
             dtGridNaturezas.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = nameof(NaturezaTributacao.TribDescricao),
-                HeaderText = "Descrição Tributação",
-                DataPropertyName = nameof(NaturezaTributacao.TribDescricao),
+                Name = nameof(NaturezaTributacao.OpDescricao),
+                HeaderText = "Descrição Operação",
+                DataPropertyName = nameof(NaturezaTributacao.OpDescricao),
                 Width = 250
             });
 
@@ -180,10 +178,10 @@ namespace CategorizarProdutos
 
         private async void btnAtualizar_Click(object sender, EventArgs e)
         {           
-            var idTributacao = cbTributacoes.SelectedValue;
-            if (idTributacao == null)
+            var idOperacao = cbTributacoes.SelectedValue;
+            if (idOperacao == null)
             {
-                MessageBox.Show("Selecione uma tributação!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione uma Operação!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -201,7 +199,7 @@ namespace CategorizarProdutos
             var comandoUpdate = new StringBuilder();       
             foreach (var natureza in naturezasSelecionadas)
             {                
-                comandoUpdate.AppendLine($"UPDATE NATOPER SET IDTRIBUTACAOFISCAL='{idTributacao}' WHERE NATOPERACAO={natureza.CodNatureza};");
+                comandoUpdate.AppendLine($"UPDATE NATOPER SET IDOPERACAOFISCAL='{idOperacao}' WHERE NATOPERACAO={natureza.CodNatureza};");
             }
 
             try

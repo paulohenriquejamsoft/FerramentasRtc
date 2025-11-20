@@ -19,8 +19,8 @@ namespace CategorizarProdutos.Models.Natureza
             }
         }
 
-        public int TribId { get; set; }
-        public string TribDescricao { get; set; }
+        public int OpId { get; set; }
+        public string OpDescricao { get; set; }
         public string CstIbsCbs { get; set; }
         public string CclassTrib { get; set; }
 

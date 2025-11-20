@@ -220,6 +220,7 @@
     </Compile>
     <Compile Include="Models\Empresa\DadosEmpresa.cs" />
     <Compile Include="Models\Natureza\NaturezaTributacao.cs" />
+    <Compile Include="Models\OperacoesFiscais\OperacaoFiscal.cs" />
     <Compile Include="Models\Produtos\ProdutoClassificacao.cs" />
     <Compile Include="Dto\ProdutosClassificados.cs" />
     <Compile Include="Models\TributacoesFiscal\TributacaoFiscal.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositorios\EmpresaRepository.cs" />
     <Compile Include="Repositorios\NaturezaRepository.cs" />
+    <Compile Include="Repositorios\OperacaoFiscalRepository.cs" />
     <Compile Include="Repositorios\ProdutoRepository.cs" />
     <Compile Include="Repositorios\TributacaoFiscalRepository.cs" />
     <EmbeddedResource Include="FrmExportarProdutos.resx">
