@@ -33,6 +33,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblConexao = new System.Windows.Forms.Label();
             this.txtBanco = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.btnConectar = new System.Windows.Forms.Button();
@@ -47,7 +48,6 @@
             this.btnExportarProdComAnexo = new System.Windows.Forms.Button();
             this.btnNaturezaTributacao = new System.Windows.Forms.Button();
             this.lblVersao = new System.Windows.Forms.Label();
-            this.lblConexao = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -106,6 +106,16 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Dados de Conexão";
+            // 
+            // lblConexao
+            // 
+            this.lblConexao.AutoSize = true;
+            this.lblConexao.ForeColor = System.Drawing.Color.ForestGreen;
+            this.lblConexao.Location = new System.Drawing.Point(410, 101);
+            this.lblConexao.Name = "lblConexao";
+            this.lblConexao.Size = new System.Drawing.Size(29, 19);
+            this.lblConexao.TabIndex = 9;
+            this.lblConexao.Text = "     ";
             // 
             // txtBanco
             // 
@@ -246,16 +256,6 @@
             this.lblVersao.Size = new System.Drawing.Size(87, 15);
             this.lblVersao.TabIndex = 3;
             this.lblVersao.Text = "Versão: 0.0.0.0";
-            // 
-            // lblConexao
-            // 
-            this.lblConexao.AutoSize = true;
-            this.lblConexao.ForeColor = System.Drawing.Color.ForestGreen;
-            this.lblConexao.Location = new System.Drawing.Point(410, 101);
-            this.lblConexao.Name = "lblConexao";
-            this.lblConexao.Size = new System.Drawing.Size(29, 19);
-            this.lblConexao.TabIndex = 9;
-            this.lblConexao.Text = "     ";
             // 
             // FrmPrincipal
             // 
