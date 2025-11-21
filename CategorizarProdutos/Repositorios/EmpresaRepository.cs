@@ -13,7 +13,8 @@ namespace CategorizarProdutos.Repositorios
         {
             var query = @"SELECT CODEMPRESA, EMPRESA, CNPJ
                             FROM CADEMPRESA AS EMP
-                            INNER JOIN CLIENTES AS CLI ON CLI.CODIGO=EMP.CODEMPRESA
+                            INNER JOIN CLIENTES AS CLI ON CLI.CODIGO=EMP.CODEMPRESA 
+                            WHERE CODREGIME=3
                             ORDER BY CODEMPRESA ASC";
             var cnx = Conexao.ObterConexao();
             var resultado = await cnx.QueryAsync<DadosEmpresa>(query);
