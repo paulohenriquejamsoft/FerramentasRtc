@@ -48,6 +48,7 @@
             this.btnExportarProdComAnexo = new System.Windows.Forms.Button();
             this.btnNaturezaTributacao = new System.Windows.Forms.Button();
             this.lblVersao = new System.Windows.Forms.Label();
+            this.btnImportarClassificacao = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -214,6 +215,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnImportarClassificacao);
             this.groupBox2.Controls.Add(this.btnExportarProdComAnexo);
             this.groupBox2.Controls.Add(this.btnNaturezaTributacao);
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -226,7 +228,7 @@
             // 
             // btnExportarProdComAnexo
             // 
-            this.btnExportarProdComAnexo.Location = new System.Drawing.Point(309, 35);
+            this.btnExportarProdComAnexo.Location = new System.Drawing.Point(10, 59);
             this.btnExportarProdComAnexo.Name = "btnExportarProdComAnexo";
             this.btnExportarProdComAnexo.Size = new System.Drawing.Size(156, 41);
             this.btnExportarProdComAnexo.TabIndex = 1;
@@ -237,7 +239,7 @@
             // 
             // btnNaturezaTributacao
             // 
-            this.btnNaturezaTributacao.Location = new System.Drawing.Point(10, 35);
+            this.btnNaturezaTributacao.Location = new System.Drawing.Point(386, 59);
             this.btnNaturezaTributacao.Name = "btnNaturezaTributacao";
             this.btnNaturezaTributacao.Size = new System.Drawing.Size(293, 41);
             this.btnNaturezaTributacao.TabIndex = 0;
@@ -256,6 +258,16 @@
             this.lblVersao.Size = new System.Drawing.Size(87, 15);
             this.lblVersao.TabIndex = 3;
             this.lblVersao.Text = "Versão: 0.0.0.0";
+            // 
+            // btnImportarClassificacao
+            // 
+            this.btnImportarClassificacao.Location = new System.Drawing.Point(178, 59);
+            this.btnImportarClassificacao.Name = "btnImportarClassificacao";
+            this.btnImportarClassificacao.Size = new System.Drawing.Size(196, 41);
+            this.btnImportarClassificacao.TabIndex = 2;
+            this.btnImportarClassificacao.Text = "Importar Classificação";
+            this.btnImportarClassificacao.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnImportarClassificacao.UseVisualStyleBackColor = true;
             // 
             // FrmPrincipal
             // 
@@ -306,6 +318,7 @@
         private System.Windows.Forms.Button btnExportarProdComAnexo;
         private System.Windows.Forms.Label lblVersao;
         private System.Windows.Forms.Label lblConexao;
+        private System.Windows.Forms.Button btnImportarClassificacao;
     }
 }
 
