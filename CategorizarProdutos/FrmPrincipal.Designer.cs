@@ -268,6 +268,7 @@
             this.btnImportarClassificacao.Text = "Importar Classificação";
             this.btnImportarClassificacao.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnImportarClassificacao.UseVisualStyleBackColor = true;
+            this.btnImportarClassificacao.Click += new System.EventHandler(this.btnImportarClassificacao_Click);
             // 
             // FrmPrincipal
             // 

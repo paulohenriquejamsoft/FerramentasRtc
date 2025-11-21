@@ -15,7 +15,7 @@ namespace CategorizarProdutos
 {
     public partial class FrmExportarProdutos : Form
     {
-
+        private List<DadosEmpresa> _empresas;       
         public FrmExportarProdutos()
         {
             InitializeComponent();
@@ -33,12 +33,12 @@ namespace CategorizarProdutos
 
         public async Task PreencherComboTributacao()
         {
-            var empresas = await new EmpresaRepository().ObterEmpresas();
+            _empresas = await new EmpresaRepository().ObterEmpresas();
 
-            cbEmpresa.DataSource = empresas;
-            cbEmpresa.ValueMember = nameof(DadosEmpresa.Cnpj);
+            cbEmpresa.DataSource = _empresas;
+            cbEmpresa.ValueMember = nameof(DadosEmpresa.CodEmpresa);
             cbEmpresa.DisplayMember = nameof(DadosEmpresa.DescricaoCombo);
-            if (empresas.Count > 0)
+            if (_empresas.Count > 0)
                 cbEmpresa.SelectedIndex = 0;
         }
 
@@ -77,9 +77,12 @@ namespace CategorizarProdutos
                                             .ToList();
                 }
 
+                var nomeArquivoXlsx = "";
+
                 List<LayoutTabela> colunas;
                 if (rdTempPadrao.Checked)
                 {
+                    nomeArquivoXlsx = "Padrão";
                     colunas = new List<LayoutTabela>
                            {
                                new LayoutTabela("A", "CNPJ", "CnpjEmpresa"),
@@ -104,6 +107,7 @@ namespace CategorizarProdutos
                 }
                 else if (rdTempSemClassificacao.Checked)
                 {
+                    nomeArquivoXlsx = "Lista";
                     colunas = new List<LayoutTabela>
                            {
                                new LayoutTabela("A", "CNPJ", "CnpjEmpresa"),
@@ -118,6 +122,7 @@ namespace CategorizarProdutos
                 }
                 else
                 {
+                    nomeArquivoXlsx = "Sugestão";
                     colunas = new List<LayoutTabela>
                            {
                                new LayoutTabela("A", "CNPJ", "CnpjEmpresa"),
@@ -147,15 +152,26 @@ namespace CategorizarProdutos
                 }
                 else
                 {
-                    var arquivoDestino = EscolherCaminhoArquivo();
+                    var empresaSelecionada = _empresas
+                        .FirstOrDefault(f => f.CodEmpresa == Convert.ToInt32((cbEmpresa.SelectedValue ?? 0)));
+
+                    string cnpjEmpresa = "00000000000000";
+                    if (empresaSelecionada != null)
+                    {
+                        cnpjEmpresa = empresaSelecionada.Cnpj;
+                        nomeArquivoXlsx += "_" + empresaSelecionada.Empresa
+                                                                    .Replace("-", "_")
+                                                                    .Replace(" ", "_");
+                    }
+                    nomeArquivoXlsx += ".xlsx";
+
+                    var arquivoDestino = EscolherCaminhoArquivo(nomeArquivoXlsx);
                     if (string.IsNullOrWhiteSpace(arquivoDestino))
                     {
                         MessageBox.Show("Operação cancelada.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         btnExportar.Enabled = true;
                         return;
                     }
-
-                    var cnpjEmpresa = cbEmpresa.SelectedValue?.ToString() ?? "00000000000000";
 
                     produtosClassificados = produtosClassificados.OrderBy(p => p.CodProd).ToList();
                     var produtosClassificado = new ProdutosClassificados()
@@ -180,7 +196,7 @@ namespace CategorizarProdutos
 
         private async Task<List<ProdutoClassificacao>> ClassificarProdutos(List<ProdutoClassificacao> produtos)
         {
-            var ncmsTabela = await CarregarTabelaNcm();
+            var ncmsTabela = CarregarTabelaNcm();
             if (ncmsTabela == null || ncmsTabela.Count == 0)
             {
                 MessageBox.Show("Não foi possível carregar a tabela NCM.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -249,46 +265,13 @@ namespace CategorizarProdutos
             return produtos;
         }
 
-        private async Task<List<Nomenclatura>> CarregarTabelaNcm()
+        private List<Nomenclatura> CarregarTabelaNcm()
         {
             var diretorioAtual = AppDomain.CurrentDomain.BaseDirectory;
             var tabelaNcmJson = $"{diretorioAtual}Tabelas\\tabela_ncm.json";
-
-            var resultadoDownload = await BaixarTabelaNcmAsync(tabelaNcmJson);
-            if (!resultadoDownload)
-            {
-                MessageBox.Show("O sistema irá utilizar a tabela existente em cache.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
             var retono = JsonSerializer.Deserialize<NcmCamex>(File.ReadAllText(tabelaNcmJson), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             return retono?.Nomenclaturas;
-        }
-
-        private async Task<bool> BaixarTabelaNcmAsync(string arquivoTabela)
-        {
-            try
-            {
-                var urlTabelaNcm = "https://www.unimake.com.br/downloads/tabela_ncm.json";
-                var httpClient = new System.Net.Http.HttpClient();
-                var resposta = await httpClient.GetAsync(urlTabelaNcm);
-                if (resposta.IsSuccessStatusCode)
-                {
-                    var conteudo = await resposta.Content.ReadAsStringAsync();
-                    File.WriteAllText(arquivoTabela, conteudo);
-                    return true;
-                }
-                else
-                {
-                    MessageBox.Show("Não foi possível baixar a tabela NCM.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ocorreu um erro ao baixar a tabela NCM:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
+        }      
 
         private void GerarPlanilha(List<LayoutTabela> colunas, List<ProdutosClassificados> produtos, string arquivo)
         {
@@ -315,13 +298,14 @@ namespace CategorizarProdutos
             workbook.SaveAs(arquivo);
         }
 
-        private string EscolherCaminhoArquivo()
+        private string EscolherCaminhoArquivo(string nomeSugestaoArquivo)
         {
             var fileDialog = new SaveFileDialog
             {
                 Filter = "Arquivo Excel (*.xlsx)|*.xlsx",
                 Title = "Salvar arquivo Excel"
             };
+            fileDialog.FileName = nomeSugestaoArquivo;
             fileDialog.ShowDialog();
 
             var nomeArquivo = fileDialog.FileName;
@@ -350,4 +334,6 @@ namespace CategorizarProdutos
         public string DescricaoColuna { get; private set; }
         public string CampoLinha { get; private set; }
     }
+
+
 }

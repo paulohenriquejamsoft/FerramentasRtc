@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -9,6 +10,7 @@ namespace CategorizarProdutos
 {
     public partial class FrmPrincipal : Form
     {
+        private bool _baixarTabelaNcm = true;
         public FrmPrincipal()
         {
             InitializeComponent();
@@ -29,7 +31,7 @@ namespace CategorizarProdutos
                 lblConexao.Text = string.Empty;
                 lblConexao.Refresh();
 
-                Task.Delay(1000).Wait();                
+                Task.Delay(1000).Wait();
 
                 var servidor = txtServidor.Text.Trim();
                 var usuario = txtUsuario.Text.Trim();
@@ -50,14 +52,14 @@ namespace CategorizarProdutos
                     erros.AppendLine("O campo 'Banco de Dados' é obrigatório.");
 
                 if (erros.Length > 0)
-                {                    
+                {
                     return;
                 }
 
                 Conexao.FecharConexao();
                 Conexao.PreencherConexao(servidor, usuario, senha, banco);
                 if (Conexao.TestarConexao())
-                {                   
+                {
                     pnFerramentas.Enabled = true;
                     lblConexao.Text = "Conectado!!!";
                     //MessageBox.Show("Conexao realizada com sucesso!");
@@ -90,12 +92,65 @@ namespace CategorizarProdutos
                 await operacaoRepository.InserirOperacaoPadrao();
         }
 
-        private void btnExportarProdComAnexo_Click(object sender, EventArgs e)
+        private async void btnExportarProdComAnexo_Click(object sender, EventArgs e)
         {
+            btnExportarProdComAnexo.Enabled = false;
+            if (_baixarTabelaNcm)
+            {
+                var diretorioAtual = AppDomain.CurrentDomain.BaseDirectory;
+                var tabelaNcmJson = $"{diretorioAtual}Tabelas\\tabela_ncm.json";
+
+                var resultadoDownload = await BaixarTabelaNcmAsync(tabelaNcmJson);
+                if (!resultadoDownload)
+                {
+                    MessageBox.Show("O sistema irá utilizar a tabela existente em cache.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    _baixarTabelaNcm = false;
+                }                    
+            }            
             using (var frmProdutos = new FrmExportarProdutos())
             {
                 frmProdutos.ShowDialog();
             }
-        }   
+            btnExportarProdComAnexo.Enabled = true;
+        }
+
+        private async Task<bool> BaixarTabelaNcmAsync(string arquivoTabela)
+        {
+            try
+            {
+                var urlTabelaNcm = "https://www.unimake.com.br/downloads/tabela_ncm.json";
+                var httpClient = new System.Net.Http.HttpClient();
+                var resposta = await httpClient.GetAsync(urlTabelaNcm);
+                if (resposta.IsSuccessStatusCode)
+                {
+                    var conteudo = await resposta.Content.ReadAsStringAsync();
+                    File.WriteAllText(arquivoTabela, conteudo);
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Não foi possível baixar a tabela NCM.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocorreu um erro ao baixar a tabela NCM:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        private async void btnImportarClassificacao_Click(object sender, EventArgs e)
+        {
+
+            await CriarTributacaoPadraoAsync();
+            using (var frm = new FrmImportarClassificacao())
+            {
+                frm.ShowDialog();
+            }
+        }
     }
 }
