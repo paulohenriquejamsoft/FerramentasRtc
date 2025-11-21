@@ -101,6 +101,16 @@ namespace CategorizarProdutos.Properties {
         }
         
         /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Byte[].
+        /// </summary>
+        internal static byte[] Modelo_Importacao_Classificacao {
+            get {
+                object obj = ResourceManager.GetObject("Modelo_Importacao_Classificacao", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Synchronize {

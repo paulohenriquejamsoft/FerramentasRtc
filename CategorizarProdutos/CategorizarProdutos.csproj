@@ -277,6 +277,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\Modelo_Importacao_Classificacao.xlsx" />
     <None Include="resources\Synchronize.png" />
     <None Include="resources\Disconnected.png" />
     <None Include="resources\Close.png" />
