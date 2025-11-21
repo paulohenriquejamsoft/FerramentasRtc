@@ -159,8 +159,8 @@ namespace CategorizarProdutos
 
                     produtosClassificados = produtosClassificados.OrderBy(p => p.CodProd).ToList();
                     var produtosClassificado = new ProdutosClassificados()
-                                                .Converter(produtosClassificados, 
-                                                        cnpjEmpresa, 
+                                                .Converter(produtosClassificados,
+                                                        cnpjEmpresa,
                                                         rdTempComClassifPadrao.Checked);
 
                     GerarPlanilha(colunas, produtosClassificado, arquivoDestino);
@@ -180,7 +180,7 @@ namespace CategorizarProdutos
 
         private async Task<List<ProdutoClassificacao>> ClassificarProdutos(List<ProdutoClassificacao> produtos)
         {
-            var ncmsTabela = CarregarTabelaNcm();
+            var ncmsTabela = await CarregarTabelaNcm();
             if (ncmsTabela == null || ncmsTabela.Count == 0)
             {
                 MessageBox.Show("Não foi possível carregar a tabela NCM.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -188,6 +188,7 @@ namespace CategorizarProdutos
             }
 
             var combinacoes = ncmsTabela
+               .Where(x => x.Anexos != null && x.Anexos.Count > 0)
                .Select(x => x.CodigoProxy.Length)
                .Distinct()
                .OrderBy(x => x)
@@ -248,13 +249,45 @@ namespace CategorizarProdutos
             return produtos;
         }
 
-
-        private List<Nomenclatura> CarregarTabelaNcm()
+        private async Task<List<Nomenclatura>> CarregarTabelaNcm()
         {
             var diretorioAtual = AppDomain.CurrentDomain.BaseDirectory;
-            var tabelaNcmJson = $"{diretorioAtual}\\Tabelas\\tabela_ncm.json";
+            var tabelaNcmJson = $"{diretorioAtual}Tabelas\\tabela_ncm.json";
+
+            var resultadoDownload = await BaixarTabelaNcmAsync(tabelaNcmJson);
+            if (!resultadoDownload)
+            {
+                MessageBox.Show("O sistema irá utilizar a tabela existente em cache.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
             var retono = JsonSerializer.Deserialize<NcmCamex>(File.ReadAllText(tabelaNcmJson), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             return retono?.Nomenclaturas;
+        }
+
+        private async Task<bool> BaixarTabelaNcmAsync(string arquivoTabela)
+        {
+            try
+            {
+                var urlTabelaNcm = "https://www.unimake.com.br/downloads/tabela_ncm.json";
+                var httpClient = new System.Net.Http.HttpClient();
+                var resposta = await httpClient.GetAsync(urlTabelaNcm);
+                if (resposta.IsSuccessStatusCode)
+                {
+                    var conteudo = await resposta.Content.ReadAsStringAsync();
+                    File.WriteAllText(arquivoTabela, conteudo);
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Não foi possível baixar a tabela NCM.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocorreu um erro ao baixar a tabela NCM:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
         }
 
         private void GerarPlanilha(List<LayoutTabela> colunas, List<ProdutosClassificados> produtos, string arquivo)
@@ -296,7 +329,7 @@ namespace CategorizarProdutos
                 return string.Empty;
 
             nomeArquivo = nomeArquivo
-                            .ToLower()                            
+                            .ToLower()
                             .Replace(".xlsx", string.Empty)
                             .Replace(".xls", string.Empty);
 
