@@ -24,5 +24,23 @@ namespace CategorizarProdutos.Repositorios
 
             return (resultado ?? new List<OperacaoFiscal>()).ToList();
         }
+
+        public async Task<int> QtdOperacaoFiscalVenda()
+        {
+            var query = @"select count(*) from operacao_fiscal where rotina_venda=1";
+            var cnx = Conexao.ObterConexao();
+            var resultado = await cnx.QueryFirstOrDefaultAsync<int?>(query);
+
+            return resultado ?? 0;
+        }
+
+        public async Task InserirOperacaoPadrao()
+        {
+            var comando = @"INSERT INTO operacao_fiscal 
+                        (descricao_operacao, data_cadastro, data_alteracao, rotina_devol_venda, rotina_venda) 
+                        VALUES ('Venda', GETDATE(), GETDATE(), 0,1)";
+            var cnx = Conexao.ObterConexao();
+            await cnx.ExecuteAsync(comando);
+        }
     }
 }

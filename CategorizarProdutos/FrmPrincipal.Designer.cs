@@ -111,7 +111,7 @@
             this.txtBanco.Name = "txtBanco";
             this.txtBanco.Size = new System.Drawing.Size(202, 25);
             this.txtBanco.TabIndex = 8;
-            this.txtBanco.Text = "Varejo";
+            this.txtBanco.Text = "VarejoReformaTrib";
             // 
             // label5
             // 

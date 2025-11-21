@@ -2,6 +2,7 @@
 using System.Text;
 using System.Windows.Forms;
 using CategorizarProdutos.Dao;
+using CategorizarProdutos.Repositorios;
 
 namespace CategorizarProdutos
 {
@@ -19,7 +20,7 @@ namespace CategorizarProdutos
             lblVersao.Text = $"Versão: {Application.ProductVersion}";
         }
 
-        private void btnConectar_Click(object sender, EventArgs e)
+        private async void btnConectar_Click(object sender, EventArgs e)
         {
             pnFerramentas.Enabled = false;
             try
@@ -51,6 +52,11 @@ namespace CategorizarProdutos
                 Conexao.PreencherConexao(servidor, usuario, senha, banco);
                 if (Conexao.TestarConexao())
                 {
+                    var operacaoRepository = new OperacaoFiscalRepository();
+                    var qtdOperacoes = await operacaoRepository.QtdOperacaoFiscalVenda();
+                    if (qtdOperacoes == 0)
+                        await operacaoRepository.InserirOperacaoPadrao();
+
                     pnFerramentas.Enabled = true;
                 }
                 else
