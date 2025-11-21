@@ -10,16 +10,18 @@ using CategorizarProdutos.Dao;
 using CategorizarProdutos.Models.Natureza;
 using CategorizarProdutos.Models.OperacoesFiscais;
 using CategorizarProdutos.Repositorios;
+using ClosedXML.Excel;
 using Dapper;
 
 namespace CategorizarProdutos
 {
     public partial class FrmImportarClassificacao : Form
     {
-        private CheckBox headerCheckBox = new CheckBox();        
+        private CheckBox headerCheckBox = new CheckBox();
+        List<ClassificacaoExcel> _classificacoes = new List<ClassificacaoExcel>();
         public FrmImportarClassificacao()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         private void btnFechar_Click(object sender, EventArgs e)
@@ -37,7 +39,7 @@ namespace CategorizarProdutos
         {
             var naturezas = await new NaturezaRepository().ObterNaturezasTributacao();
             naturezas = naturezas
-                .Where(x => x.CfopProxy>=5000)
+                .Where(x => x.CfopProxy >= 5000)
                 .OrderBy(o => o.CfopProxy)
                 .ThenBy(t => t.DescrNatureza)
                 .ToList();
@@ -178,7 +180,7 @@ namespace CategorizarProdutos
         }
 
         private async void btnAtualizar_Click(object sender, EventArgs e)
-        {           
+        {
             var idOperacao = cbTributacoes.SelectedValue;
             if (idOperacao == null)
             {
@@ -194,12 +196,12 @@ namespace CategorizarProdutos
             }
 
             var resultado = MessageBox.Show("Tem certeza que deseja atualizar as naturezas selecionadas?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if(resultado == DialogResult.No)
+            if (resultado == DialogResult.No)
                 return;
 
-            var comandoUpdate = new StringBuilder();       
+            var comandoUpdate = new StringBuilder();
             foreach (var natureza in naturezasSelecionadas)
-            {                
+            {
                 comandoUpdate.AppendLine($"UPDATE NATOPER SET IDOPERACAOFISCAL='{idOperacao}' WHERE NATOPERACAO={natureza.CodNatureza};");
             }
 
@@ -234,7 +236,72 @@ namespace CategorizarProdutos
                         MessageBox.Show($"Erro ao salvar arquivo: {ex.Message}");
                     }
                 }
-            }            
+            }
         }
+
+        private void btnImportar_Click(object sender, EventArgs e)
+        {
+            _classificacoes.Clear();
+            pnClassificacao.Enabled = false;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Arquivos Excel (*.xlsx;*.xls)|*.xlsx;*.xls";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string arquivoXlsx = openFileDialog.FileName;
+                    FileInfo fileInfo = new FileInfo(arquivoXlsx);
+                    if (fileInfo.Extension.ToLower().Equals(".xlsx"))
+                    {
+                        lblArquivoImportacao.Text = arquivoXlsx;
+                        ExtrairDadosModelo(arquivoXlsx);
+                        if (_classificacoes.Count == 0)
+                        {
+                            MessageBox.Show("Não foi encontrado nenhum calssificação.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            pnClassificacao.Enabled = true;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Formato de arquivo não suportado. Por favor, selecione um arquivo Excel (.xlsx).", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void ExtrairDadosModelo(string arquivoXlsx)
+        {
+            try
+            {
+                using (var workbook = new XLWorkbook(arquivoXlsx))
+                {
+                    var worksheet = workbook.Worksheet(1);
+                    int ultimaLinha = worksheet.LastRowUsed().RowNumber();
+                    for (int linha = 2; linha <= ultimaLinha; linha++)
+                    {
+                        var cst = worksheet.Cell($"G{linha}").Value.ToString();
+                        var cclasstrib = worksheet.Cell($"H{linha}").Value.ToString();
+
+                        var tamanhoCst = 3;
+                        var tamanhoCclasstrib = 6;
+                        if (cst.Length == tamanhoCst && cclasstrib.Length == tamanhoCclasstrib)
+                            _classificacoes.Add(new ClassificacaoExcel { Cst = cst, CClassTrib = cclasstrib });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro na importação da classificação:\n {ex.Message}");
+            }
+
+        }
+    }
+
+    public class ClassificacaoExcel
+    {
+        public string Cst { get; set; }
+        public string CClassTrib { get; set; }
     }
 }
