@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using CategorizarProdutos.Dao;
 using CategorizarProdutos.Repositorios;
@@ -20,11 +21,16 @@ namespace CategorizarProdutos
             lblVersao.Text = $"Versão: {Application.ProductVersion}";
         }
 
-        private async void btnConectar_Click(object sender, EventArgs e)
+        private void btnConectar_Click(object sender, EventArgs e)
         {
             pnFerramentas.Enabled = false;
             try
             {
+                lblConexao.Text = string.Empty;
+                lblConexao.Refresh();
+
+                Task.Delay(1000).Wait();                
+
                 var servidor = txtServidor.Text.Trim();
                 var usuario = txtUsuario.Text.Trim();
                 var senha = txtSenha.Text.Trim();
@@ -44,20 +50,17 @@ namespace CategorizarProdutos
                     erros.AppendLine("O campo 'Banco de Dados' é obrigatório.");
 
                 if (erros.Length > 0)
-                {
-                    MessageBox.Show(erros.ToString(), "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                {                    
                     return;
                 }
 
+                Conexao.FecharConexao();
                 Conexao.PreencherConexao(servidor, usuario, senha, banco);
                 if (Conexao.TestarConexao())
-                {
-                    var operacaoRepository = new OperacaoFiscalRepository();
-                    var qtdOperacoes = await operacaoRepository.QtdOperacaoFiscalVenda();
-                    if (qtdOperacoes == 0)
-                        await operacaoRepository.InserirOperacaoPadrao();
-
+                {                   
                     pnFerramentas.Enabled = true;
+                    lblConexao.Text = "Conectado!!!";
+                    //MessageBox.Show("Conexao realizada com sucesso!");
                 }
                 else
                 {
@@ -70,12 +73,21 @@ namespace CategorizarProdutos
             }
         }
 
-        private void btnNaturezaTributacao_Click(object sender, EventArgs e)
+        private async void btnNaturezaTributacao_Click(object sender, EventArgs e)
         {
+            await CriarTributacaoPadraoAsync();
             using (var frm = new FrmNaturezaTributacao())
             {
                 frm.ShowDialog();
             }
+        }
+
+        public async Task CriarTributacaoPadraoAsync()
+        {
+            var operacaoRepository = new OperacaoFiscalRepository();
+            var qtdOperacoes = await operacaoRepository.QtdOperacaoFiscalVenda();
+            if (qtdOperacoes == 0)
+                await operacaoRepository.InserirOperacaoPadrao();
         }
 
         private void btnExportarProdComAnexo_Click(object sender, EventArgs e)

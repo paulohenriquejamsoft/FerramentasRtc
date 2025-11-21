@@ -47,6 +47,7 @@
             this.btnExportarProdComAnexo = new System.Windows.Forms.Button();
             this.btnNaturezaTributacao = new System.Windows.Forms.Button();
             this.lblVersao = new System.Windows.Forms.Label();
+            this.lblConexao = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -88,6 +89,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lblConexao);
             this.groupBox1.Controls.Add(this.txtBanco);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.btnConectar);
@@ -245,6 +247,16 @@
             this.lblVersao.TabIndex = 3;
             this.lblVersao.Text = "Versão: 0.0.0.0";
             // 
+            // lblConexao
+            // 
+            this.lblConexao.AutoSize = true;
+            this.lblConexao.ForeColor = System.Drawing.Color.ForestGreen;
+            this.lblConexao.Location = new System.Drawing.Point(410, 101);
+            this.lblConexao.Name = "lblConexao";
+            this.lblConexao.Size = new System.Drawing.Size(29, 19);
+            this.lblConexao.TabIndex = 9;
+            this.lblConexao.Text = "     ";
+            // 
             // FrmPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -293,6 +305,7 @@
         private System.Windows.Forms.Button btnNaturezaTributacao;
         private System.Windows.Forms.Button btnExportarProdComAnexo;
         private System.Windows.Forms.Label lblVersao;
+        private System.Windows.Forms.Label lblConexao;
     }
 }
 
