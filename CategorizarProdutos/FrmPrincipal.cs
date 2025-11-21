@@ -29,9 +29,7 @@ namespace CategorizarProdutos
             try
             {
                 lblConexao.Text = string.Empty;
-                lblConexao.Refresh();
-
-                Task.Delay(1000).Wait();
+                lblConexao.Refresh();              
 
                 var servidor = txtServidor.Text.Trim();
                 var usuario = txtUsuario.Text.Trim();
@@ -53,16 +51,17 @@ namespace CategorizarProdutos
 
                 if (erros.Length > 0)
                 {
+                    MessageBox.Show(erros.ToString(), "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
+                Task.Delay(500).Wait();
                 Conexao.FecharConexao();
                 Conexao.PreencherConexao(servidor, usuario, senha, banco);
                 if (Conexao.TestarConexao())
                 {
                     pnFerramentas.Enabled = true;
                     lblConexao.Text = "Conectado!!!";
-                    //MessageBox.Show("Conexao realizada com sucesso!");
                 }
                 else
                 {
