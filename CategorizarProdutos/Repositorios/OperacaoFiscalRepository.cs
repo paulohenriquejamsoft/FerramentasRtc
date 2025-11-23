@@ -17,6 +17,7 @@ namespace CategorizarProdutos.Repositorios
                             LEFT JOIN TRIBUTACAOFISCAL TF ON OTF.IDTRIBUTACAOFISCAL=TF.ID
                             LEFT JOIN CBSIBS_SITUACAOTRIBUTARIA AS SIT ON SIT.ID=TF.IDCSTIBSCBS
                             LEFT JOIN CBSIBS_CLASSIFTRIBUTARIA AS CLASS ON CLASS.ID=TF.IDCLASSIFTRIBUTARIACSTIBSCBS 
+                            WHERE OP.ROTINA_VENDA=1 
                             ORDER BY OP.ID ASC
                         ";
             var cnx = Conexao.ObterConexao();
