@@ -84,7 +84,7 @@ namespace CategorizarProdutos.Dto
                     if (comClassifPadrao)
                     {
                         produtoClassificado.Anexo1 = string.Empty;
-                        produtoClassificado.Cst1 = "001";
+                        produtoClassificado.Cst1 = "000";
                         produtoClassificado.ClassTrib1 = "000001";
                     }
                 }
