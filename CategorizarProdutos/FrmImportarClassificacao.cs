@@ -73,149 +73,105 @@ namespace CategorizarProdutos
                 return;
             }
 
-            var idOperacao = cbTributacoes.SelectedValue;
-            if (idOperacao == null)
+            var idOperacao = (int)cbTributacoes.SelectedValue;
+            if (idOperacao <= 0)
             {
                 MessageBox.Show("Selecione uma Operação!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var tabClassificacoes = await new ClassifTributariaRepository().ObterTodas();
 
-            var tributacaoFiscalRepo = new TributacaoFiscalRepository();
-
-            var tribCadastradas = await tributacaoFiscalRepo.ObterTodas();
-            var classificGrid = ObterClassificacoesGrid();
-            var novosRegistros = false;
-            foreach (var classificacao in classificGrid)
+            try
             {
-                var registro = tribCadastradas.Find(t => t.CclassTrib == classificacao.CClassTrib);
-                if (registro == null)
+                var tabClassificacoes = await new ClassifTributariaRepository().ObterTodas();
+
+                var tributacaoFiscalRepo = new TributacaoFiscalRepository();
+
+                var tribCadastradas = await tributacaoFiscalRepo.ObterTodas();
+                var classificGrid = ObterClassificacoesGrid();
+                var novosRegistros = false;
+                foreach (var classificacao in classificGrid)
                 {
-                    var registroClassif = tabClassificacoes.Find(c => c.Codigo == classificacao.CClassTrib);
-                    await tributacaoFiscalRepo.AdicionarAsync(new TributacaoFiscal
+                    var registro = tribCadastradas.Find(t => t.CclassTrib == classificacao.CClassTrib);
+                    if (registro == null)
                     {
-                        IdCstIbsCbs = registroClassif.IdSituacaoTributaria,
-                        IdClassifTributariaCstIbsCbs = registroClassif.Id,
-                        Descricao = "",
-                        Governamental = 1,
-                        tpEntiGovernamental = 0,
-                        pRedutor = 0m,
-                        TpOperGov = 0
-                    });
-                    novosRegistros = true;
-                }
-            }
-
-            // recarrega as tributacoes
-            if(novosRegistros)
-                tribCadastradas = await tributacaoFiscalRepo.ObterTodas();
-
-
-            var OperacaoFRepo = new OperacaoFiscalRepository();
-            var regras = await OperacaoFRepo.ObterRegrasOperacao(Convert.ToInt32(idOperacao));
-            foreach (var classificacao in classificGrid)
-            {
-                var tributacao = tribCadastradas.Find(t => t.CclassTrib == classificacao.CClassTrib);
-                var cClassTribPadrao = "000001";
-
-                var iscClassTribPadrao = classificacao.CClassTrib.Equals(cClassTribPadrao);
-
-                OperacaoTributacaoFiscal regra;
-                if (iscClassTribPadrao)
-                {
-                    regra = regras.Find(r => r.IdTributacaoFiscal == tributacao.Id && r.TipoRegra == 1);
-                    if(regra == null)
-                    {
-                        await OperacaoFRepo.InserirRegrasOperacao(new OperacaoTributacaoFiscal
+                        var registroClassif = tabClassificacoes.Find(c => c.Codigo == classificacao.CClassTrib);
+                        await tributacaoFiscalRepo.AdicionarAsync(new TributacaoFiscal
                         {
-                            IdOperFiscal = Convert.ToInt32(idOperacao),
-                            IdTributacaoFiscal = tributacao.Id,
-                            TipoRegra = 1,
-                            Ncm = ""
+                            IdCstIbsCbs = registroClassif.IdSituacaoTributaria,
+                            IdClassifTributariaCstIbsCbs = registroClassif.Id,
+                            Descricao = "",
+                            Governamental = 1,
+                            tpEntiGovernamental = 0,
+                            pRedutor = 0m,
+                            TpOperGov = 0
                         });
+                        novosRegistros = true;
                     }
-
-                    _classificacoes.RemoveAll(t => t.CClassTrib == classificacao.CClassTrib);
-                    continue;
                 }
-                else
+
+                // recarrega as tributacoes
+                if (novosRegistros)
+                    tribCadastradas = await tributacaoFiscalRepo.ObterTodas();
+
+
+                var OperacaoFRepo = new OperacaoFiscalRepository();
+                var regras = await OperacaoFRepo.ObterRegrasOperacao(Convert.ToInt32(idOperacao));
+                foreach (var classificacao in classificGrid)
                 {
-                    var registrosClassif = _classificacoes
-                                        .Where(t => t.CClassTrib == classificacao.CClassTrib)
-                                        .GroupBy(c => new { c.Ncm, c.CClassTrib })
-                                        .Select(x => x.First())
-                                        .ToList();
-                    foreach (var registroClassif in registrosClassif)
+                    var tributacao = tribCadastradas.Find(t => t.CclassTrib == classificacao.CClassTrib);
+                    var cClassTribPadrao = "000001";
+
+                    var iscClassTribPadrao = classificacao.CClassTrib.Equals(cClassTribPadrao);
+
+                    OperacaoTributacaoFiscal regra;
+                    if (iscClassTribPadrao)
                     {
-                        regra = regras.Find(r => r.IdTributacaoFiscal == tributacao.Id && r.TipoRegra == 2 && r.Ncm.Equals(registroClassif.Ncm));
-                        if(regra == null)
+                        regra = regras.Find(r => r.IdOperFiscal == idOperacao && r.TipoRegra == 1);
+                        if (regra == null)
                         {
                             await OperacaoFRepo.InserirRegrasOperacao(new OperacaoTributacaoFiscal
                             {
                                 IdOperFiscal = Convert.ToInt32(idOperacao),
                                 IdTributacaoFiscal = tributacao.Id,
-                                TipoRegra = 2,
-                                Ncm = registroClassif.Ncm
+                                TipoRegra = 1,
+                                Ncm = ""
                             });
+                        }
+
+                        _classificacoes.RemoveAll(t => t.CClassTrib == classificacao.CClassTrib);
+                        continue;
+                    }
+                    else
+                    {
+                        var registrosClassif = _classificacoes
+                                            .Where(t => t.CClassTrib == classificacao.CClassTrib)
+                                            .GroupBy(c => new { c.Ncm, c.CClassTrib })
+                                            .Select(x => x.First())
+                                            .ToList();
+                        foreach (var registroClassif in registrosClassif)
+                        {
+                            regra = regras.Find(r => r.IdOperFiscal == idOperacao && r.TipoRegra == 2 && r.Ncm.Equals(registroClassif.Ncm));
+                            if (regra == null)
+                            {
+                                await OperacaoFRepo.InserirRegrasOperacao(new OperacaoTributacaoFiscal
+                                {
+                                    IdOperFiscal = Convert.ToInt32(idOperacao),
+                                    IdTributacaoFiscal = tributacao.Id,
+                                    TipoRegra = 2,
+                                    Ncm = registroClassif.Ncm
+                                });
+                            }
                         }
                     }
                 }
 
-                    
-                //var registrosClassif = _classificacoes.Where(t => t.CClassTrib == classificacao.CClassTrib).ToList();
-                //foreach (var registroClassif in registrosClassif)
-                //{
-
-                //}
-
-                //_classificacoes.RemoveAll(t => t.CClassTrib == classificacao.CClassTrib);
-                //var registroRegra = regras.
-
-                //if (classificacao.CClassTrib.Equals(cClassTribPadrao))
-                //{
-
-                //}
-                //else
-                //{
-
-                //}
-
-
+                MessageBox.Show("Classificações importadas com sucesso!!!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-
-
-
-            var teste = "";
-
-            //var naturezasSelecionadas = ObterNaturezasSelecionadas();
-            //if (naturezasSelecionadas.Count == 0)
-            //{
-            //    MessageBox.Show("Selecione alguma natureza!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
-
-            //var resultado = MessageBox.Show("Tem certeza que deseja atualizar as naturezas selecionadas?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            //if (resultado == DialogResult.No)
-            //    return;
-
-            //var comandoUpdate = new StringBuilder();
-            //foreach (var natureza in naturezasSelecionadas)
-            //{
-            //    comandoUpdate.AppendLine($"UPDATE NATOPER SET IDOPERACAOFISCAL='{idOperacao}' WHERE NATOPERACAO={natureza.CodNatureza};");
-            //}
-
-            //try
-            //{
-            //    var cnx = Conexao.ObterConexao();
-            //    cnx.Execute(comandoUpdate.ToString());
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Ocorreu um erro ao atualizar as naturezas:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;
-            //}
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocorreu um erro ao atualizar as naturezas:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void lblLinkModelo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
