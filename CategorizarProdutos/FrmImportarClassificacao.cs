@@ -1,23 +1,22 @@
-﻿using System;
+﻿using CategorizarProdutos.Dao;
+using CategorizarProdutos.Models.Natureza;
+using CategorizarProdutos.Models.OperacoesFiscais;
+using CategorizarProdutos.Models.TributacoesFiscal;
+using CategorizarProdutos.Repositorios;
+using ClosedXML.Excel;
+using Dapper;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CategorizarProdutos.Dao;
-using CategorizarProdutos.Models.Natureza;
-using CategorizarProdutos.Models.OperacoesFiscais;
-using CategorizarProdutos.Repositorios;
-using ClosedXML.Excel;
-using Dapper;
 
 namespace CategorizarProdutos
 {
     public partial class FrmImportarClassificacao : Form
     {
-        private CheckBox headerCheckBox = new CheckBox();
         List<ClassificacaoExcel> _classificacoes = new List<ClassificacaoExcel>();
         public FrmImportarClassificacao()
         {
@@ -29,35 +28,6 @@ namespace CategorizarProdutos
             this.Close();
         }
 
-        private async void FrmImportarClassificacao_Shown(object sender, EventArgs e)
-        {
-            await PreencherGridNaturezas();
-            await PreencherComboTributacao();
-        }
-
-        private async Task PreencherGridNaturezas()
-        {
-            var naturezas = await new NaturezaRepository().ObterNaturezasTributacao();
-            naturezas = naturezas
-                .Where(x => x.CfopProxy >= 5000)
-                .OrderBy(o => o.CfopProxy)
-                .ThenBy(t => t.DescrNatureza)
-                .ToList();
-
-            dtGridNaturezas.DataSource = naturezas;
-        }
-
-        public async Task PreencherComboTributacao()
-        {
-            var operacoes = await new OperacaoFiscalRepository().ObterRegistros();
-
-            cbTributacoes.DataSource = operacoes;
-            cbTributacoes.ValueMember = nameof(OperacaoFiscal.Id);
-            cbTributacoes.DisplayMember = nameof(OperacaoFiscal.DescricaoCombo);
-            if (operacoes.Count > 0)
-                cbTributacoes.SelectedIndex = 0;
-        }
-
         private void FrmImportarClassificacao_Load(object sender, EventArgs e)
         {
             ConfigurarGrid();
@@ -65,122 +35,44 @@ namespace CategorizarProdutos
 
         private void ConfigurarGrid()
         {
-            dtGridNaturezas.AutoGenerateColumns = false;
-            dtGridNaturezas.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dtGridNaturezas.Columns.Add(new DataGridViewTextBoxColumn
+            dtGridTributacoes.AutoGenerateColumns = false;
+            dtGridTributacoes.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dtGridTributacoes.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = nameof(NaturezaTributacao.CodNatureza),
-                HeaderText = "Cod. Natureza",
-                DataPropertyName = nameof(NaturezaTributacao.CodNatureza),
+                Name = nameof(ClassificacaoExcel.Cst),
+                HeaderText = "CST",
+                DataPropertyName = nameof(ClassificacaoExcel.Cst),
                 Width = 100
             });
 
-            dtGridNaturezas.Columns.Add(new DataGridViewTextBoxColumn
+            dtGridTributacoes.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = nameof(NaturezaTributacao.DescrNatureza),
-                HeaderText = "Descriçao",
-                DataPropertyName = nameof(NaturezaTributacao.DescrNatureza),
+                Name = nameof(ClassificacaoExcel.CClassTrib),
+                HeaderText = "cClasstrib",
+                DataPropertyName = nameof(ClassificacaoExcel.CClassTrib),
                 Width = 250
             });
-
-            dtGridNaturezas.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = nameof(NaturezaTributacao.Cfop),
-                HeaderText = "CFOP",
-                DataPropertyName = nameof(NaturezaTributacao.CfopProxy),
-                Width = 50
-            });
-
-            dtGridNaturezas.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = nameof(NaturezaTributacao.OpId),
-                HeaderText = "Cod. Operação",
-                DataPropertyName = nameof(NaturezaTributacao.OpId),
-                Width = 70
-            });
-
-            dtGridNaturezas.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = nameof(NaturezaTributacao.OpDescricao),
-                HeaderText = "Descrição Operação",
-                DataPropertyName = nameof(NaturezaTributacao.OpDescricao),
-                Width = 250
-            });
-
-            dtGridNaturezas.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = nameof(NaturezaTributacao.CstIbsCbs),
-                HeaderText = "CST CBS/IBS",
-                DataPropertyName = nameof(NaturezaTributacao.CstIbsCbs),
-                Width = 70
-            });
-
-            dtGridNaturezas.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = nameof(NaturezaTributacao.CclassTrib),
-                HeaderText = "Classificação",
-                DataPropertyName = nameof(NaturezaTributacao.CclassTrib),
-                Width = 85
-            });
-
-            dtGridNaturezas.Columns.Add(new DataGridViewCheckBoxColumn
-            {
-                Name = nameof(NaturezaTributacao.isSelecionado),
-                HeaderText = " ",
-                DataPropertyName = nameof(NaturezaTributacao.isSelecionado),
-                Width = 50
-            });
-
-            AddHeaderCheckBox();
         }
 
-        private void AddHeaderCheckBox()
+        private List<ClassificacaoExcel> ObterClassificacoesGrid()
         {
-            // Posição do header checkbox
-            Rectangle rect = dtGridNaturezas.GetCellDisplayRectangle(0, -1, true);
-            rect.X = rect.Location.X + 893;
-            rect.Y = rect.Location.Y + 9;
-
-            headerCheckBox.Size = new Size(18, 18);
-            headerCheckBox.Location = rect.Location;
-
-            // Evento de clique
-            headerCheckBox.CheckedChanged += HeaderCheckBox_CheckedChanged;
-
-            dtGridNaturezas.Controls.Add(headerCheckBox);
-        }
-
-        private void HeaderCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            bool checkAll = ((CheckBox)sender).Checked;
-
-            foreach (DataGridViewRow row in dtGridNaturezas.Rows)
+            List<ClassificacaoExcel> classificacoes = new List<ClassificacaoExcel>();
+            foreach (DataGridViewRow row in dtGridTributacoes.Rows)
             {
-                DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)row.Cells[nameof(NaturezaTributacao.isSelecionado)];
-                chk.Value = checkAll;
+                var natureza = row.DataBoundItem as ClassificacaoExcel;
+                classificacoes.Add(natureza);
             }
-
-            dtGridNaturezas.EndEdit();
-        }
-
-        private List<NaturezaTributacao> ObterNaturezasSelecionadas()
-        {
-            List<NaturezaTributacao> naturezasSelecionadas = new List<NaturezaTributacao>();
-            foreach (DataGridViewRow row in dtGridNaturezas.Rows)
-            {
-                bool isSelecionado = Convert.ToBoolean(row.Cells[nameof(NaturezaTributacao.isSelecionado)].Value);
-                if (isSelecionado)
-                {
-                    var natureza = row.DataBoundItem as NaturezaTributacao;
-                    naturezasSelecionadas.Add(natureza);
-                }
-            }
-
-            return naturezasSelecionadas;
+            return classificacoes;
         }
 
         private async void btnAtualizar_Click(object sender, EventArgs e)
         {
+            if (_classificacoes.Count == 0)
+            {
+                MessageBox.Show("Nenhuma classificação importada para cadastrar!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var idOperacao = cbTributacoes.SelectedValue;
             if (idOperacao == null)
             {
@@ -188,35 +80,60 @@ namespace CategorizarProdutos
                 return;
             }
 
-            var naturezasSelecionadas = ObterNaturezasSelecionadas();
-            if (naturezasSelecionadas.Count == 0)
+            var tabClassificacoes = await new ClassifTributariaRepository().ObterTodas();
+
+            var tributacaoFiscalRepo = new TributacaoFiscalRepository();
+
+            var tribCadastradas = await tributacaoFiscalRepo.ObterTodas();
+            var classificGrid = ObterClassificacoesGrid();
+            foreach (var classificacao in classificGrid)
             {
-                MessageBox.Show("Selecione alguma natureza!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                var registro = tribCadastradas.Find(t => t.CclassTrib == classificacao.CClassTrib);
+                if (registro == null)
+                {
+                    var registroClassif = tabClassificacoes.Find(c => c.Codigo == classificacao.CClassTrib);
+                    await tributacaoFiscalRepo.AdicionarAsync(new TributacaoFiscal
+                    {
+                        IdCstIbsCbs = registroClassif.IdSituacaoTributaria,
+                        IdClassifTributariaCstIbsCbs = registroClassif.Id,
+                        Descricao = "",
+                        Governamental = 1,
+                        tpEntiGovernamental = 0,
+                        pRedutor = 0m,
+                        TpOperGov = 0
+                    });
+                }
             }
 
-            var resultado = MessageBox.Show("Tem certeza que deseja atualizar as naturezas selecionadas?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (resultado == DialogResult.No)
-                return;
+            var teste = "";
 
-            var comandoUpdate = new StringBuilder();
-            foreach (var natureza in naturezasSelecionadas)
-            {
-                comandoUpdate.AppendLine($"UPDATE NATOPER SET IDOPERACAOFISCAL='{idOperacao}' WHERE NATOPERACAO={natureza.CodNatureza};");
-            }
+            //var naturezasSelecionadas = ObterNaturezasSelecionadas();
+            //if (naturezasSelecionadas.Count == 0)
+            //{
+            //    MessageBox.Show("Selecione alguma natureza!", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return;
+            //}
 
-            try
-            {
-                var cnx = Conexao.ObterConexao();
-                cnx.Execute(comandoUpdate.ToString());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ocorreu um erro ao atualizar as naturezas:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            //var resultado = MessageBox.Show("Tem certeza que deseja atualizar as naturezas selecionadas?", "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //if (resultado == DialogResult.No)
+            //    return;
 
-            await PreencherGridNaturezas();
+            //var comandoUpdate = new StringBuilder();
+            //foreach (var natureza in naturezasSelecionadas)
+            //{
+            //    comandoUpdate.AppendLine($"UPDATE NATOPER SET IDOPERACAOFISCAL='{idOperacao}' WHERE NATOPERACAO={natureza.CodNatureza};");
+            //}
+
+            //try
+            //{
+            //    var cnx = Conexao.ObterConexao();
+            //    cnx.Execute(comandoUpdate.ToString());
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Ocorreu um erro ao atualizar as naturezas:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
         }
 
         private void lblLinkModelo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -239,7 +156,7 @@ namespace CategorizarProdutos
             }
         }
 
-        private void btnImportar_Click(object sender, EventArgs e)
+        private async void btnImportar_Click(object sender, EventArgs e)
         {
             _classificacoes.Clear();
             pnClassificacao.Enabled = false;
@@ -260,6 +177,9 @@ namespace CategorizarProdutos
                         }
                         else
                         {
+                            PreencherGridTributacao();
+                            await PreencherComboTributacao();
+
                             pnClassificacao.Enabled = true;
                         }
                     }
@@ -281,13 +201,15 @@ namespace CategorizarProdutos
                     int ultimaLinha = worksheet.LastRowUsed().RowNumber();
                     for (int linha = 2; linha <= ultimaLinha; linha++)
                     {
+                        var ncm = worksheet.Cell($"D{linha}").Value.ToString();
                         var cst = worksheet.Cell($"G{linha}").Value.ToString();
                         var cclasstrib = worksheet.Cell($"H{linha}").Value.ToString();
 
                         var tamanhoCst = 3;
                         var tamanhoCclasstrib = 6;
-                        if (cst.Length == tamanhoCst && cclasstrib.Length == tamanhoCclasstrib)
-                            _classificacoes.Add(new ClassificacaoExcel { Cst = cst, CClassTrib = cclasstrib });
+                        var tamanhoNcm = 8;
+                        if (cst.Length == tamanhoCst && cclasstrib.Length == tamanhoCclasstrib && ncm.Length == tamanhoNcm)
+                            _classificacoes.Add(new ClassificacaoExcel { Cst = cst, CClassTrib = cclasstrib, Ncm = ncm });
                     }
                 }
             }
@@ -297,11 +219,31 @@ namespace CategorizarProdutos
             }
 
         }
-    }
 
+        private void PreencherGridTributacao()
+        {
+            var classificacoes = _classificacoes
+                .GroupBy(c => new { c.Cst, c.CClassTrib })
+                .Select(x => x.First())
+                .ToList();
+            dtGridTributacoes.DataSource = classificacoes;
+        }
+
+        public async Task PreencherComboTributacao()
+        {
+            var operacoes = await new OperacaoFiscalRepository().ObterRegistros();
+
+            cbTributacoes.DataSource = operacoes;
+            cbTributacoes.ValueMember = nameof(OperacaoFiscal.Id);
+            cbTributacoes.DisplayMember = nameof(OperacaoFiscal.DescricaoCombo);
+            if (operacoes.Count > 0)
+                cbTributacoes.SelectedIndex = 0;
+        }
+    }
     public class ClassificacaoExcel
     {
         public string Cst { get; set; }
         public string CClassTrib { get; set; }
+        public string Ncm { get; set; }
     }
 }

@@ -193,7 +193,7 @@
             this.txtServidor.Name = "txtServidor";
             this.txtServidor.Size = new System.Drawing.Size(202, 25);
             this.txtServidor.TabIndex = 1;
-            this.txtServidor.Text = "192.168.0.167\\sistemas";
+            this.txtServidor.Text = "191.7.141.51,47052\\sistemas";
             // 
             // label2
             // 

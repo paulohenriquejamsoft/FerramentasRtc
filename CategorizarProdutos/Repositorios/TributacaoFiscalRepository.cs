@@ -9,7 +9,7 @@ namespace CategorizarProdutos.Repositorios
 {
     public class TributacaoFiscalRepository
     {
-        public async Task<List<TributacaoFiscal>> ObterTodas()
+        public async Task<List<TributacaoFiscalClassificacao>> ObterTodas()
         {
             var query = @"
                         SELECT TF.ID, TF.DESCRICAO, SIT.CODIGO CSTIBSCBS, CLASS.CODIGO CCLASSTRIB
@@ -18,9 +18,21 @@ namespace CategorizarProdutos.Repositorios
                         LEFT JOIN CBSIBS_CLASSIFTRIBUTARIA AS CLASS ON CLASS.ID=TF.IDCLASSIFTRIBUTARIACSTIBSCBS 
                         ORDER BY TF.ID ASC";
             var cnx = Conexao.ObterConexao();
-            var resultado = await cnx.QueryAsync<TributacaoFiscal>(query);
+            var resultado = await cnx.QueryAsync<TributacaoFiscalClassificacao>(query);
 
-            return (resultado ?? new List<TributacaoFiscal>()).ToList();
+            return (resultado ?? new List<TributacaoFiscalClassificacao>()).ToList();
+        }
+
+        public async Task<bool> AdicionarAsync(TributacaoFiscal tributacaoFiscal)
+        {
+            var comando = @"
+                        INSERT INTO TRIBUTACAOFISCAL 
+                        (IDCSTIBSCBS, IDCLASSIFTRIBUTARIACSTIBSCBS, DESCRICAO, GOVERNAMENTAL, TPENTIGOVERNAMENTAL, PREDUTOR, TPOPERGOV) 
+                        VALUES 
+                        (@IdCstIbsCbs, @IdClassifTributariaCstIbsCbs, @Descricao, @Governamental, @tpEntiGovernamental, @pRedutor, @TpOperGov)";
+            var cnx = Conexao.ObterConexao();
+            var linhasAfetadas = await cnx.ExecuteAsync(comando, tributacaoFiscal);
+            return linhasAfetadas > 0;
         }
     }
 }

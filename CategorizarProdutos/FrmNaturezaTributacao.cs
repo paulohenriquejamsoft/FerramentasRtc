@@ -46,11 +46,11 @@ namespace CategorizarProdutos
 
         public async Task PreencherComboTributacao()
         {
-            var operacoes = await new OperacaoFiscalRepository().ObterRegistros();
+            var operacoes = await new OperacaoFiscalRepository().ObterRegistroseClassificacao();
 
             cbTributacoes.DataSource = operacoes;
-            cbTributacoes.ValueMember = nameof(OperacaoFiscal.Id);
-            cbTributacoes.DisplayMember = nameof(OperacaoFiscal.DescricaoCombo);
+            cbTributacoes.ValueMember = nameof(OperacaoFiscalClassificacao.Id);
+            cbTributacoes.DisplayMember = nameof(OperacaoFiscalClassificacao.DescricaoCombo);
             if (operacoes.Count > 0)
                 cbTributacoes.SelectedIndex = 0;
         }

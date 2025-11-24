@@ -9,7 +9,7 @@ namespace CategorizarProdutos.Repositorios
 {
     public class OperacaoFiscalRepository
     {
-        public async Task<List<OperacaoFiscal>> ObterRegistros()
+        public async Task<List<OperacaoFiscalClassificacao>> ObterRegistroseClassificacao()
         {
             var query = @"SELECT OP.ID, OP.DESCRICAO_OPERACAO DESCRICAO, SIT.CODIGO CSTIBSCBS, CLASS.CODIGO CCLASSTRIB 
                             FROM OPERACAO_FISCAL AS OP (NOLOCK)
@@ -19,6 +19,19 @@ namespace CategorizarProdutos.Repositorios
                             LEFT JOIN CBSIBS_CLASSIFTRIBUTARIA AS CLASS ON CLASS.ID=TF.IDCLASSIFTRIBUTARIACSTIBSCBS 
                             WHERE OP.ROTINA_VENDA=1 
                             ORDER BY OP.ID ASC
+                        ";
+            var cnx = Conexao.ObterConexao();
+            var resultado = await cnx.QueryAsync<OperacaoFiscalClassificacao>(query);
+
+            return (resultado ?? new List<OperacaoFiscalClassificacao>()).ToList();
+        }
+
+        public async Task<List<OperacaoFiscal>> ObterRegistros()
+        {
+            var query = @"SELECT OP.ID, OP.DESCRICAO_OPERACAO DESCRICAO 
+                        FROM OPERACAO_FISCAL AS OP (NOLOCK)
+                        WHERE OP.ROTINA_VENDA=1 
+                        ORDER BY OP.ID ASC
                         ";
             var cnx = Conexao.ObterConexao();
             var resultado = await cnx.QueryAsync<OperacaoFiscal>(query);
