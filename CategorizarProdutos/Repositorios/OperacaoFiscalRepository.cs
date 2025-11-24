@@ -37,7 +37,7 @@ namespace CategorizarProdutos.Repositorios
             var resultado = await cnx.QueryAsync<OperacaoFiscal>(query);
 
             return (resultado ?? new List<OperacaoFiscal>()).ToList();
-        }
+        }      
 
         public async Task<int> QtdOperacaoFiscalVenda()
         {
@@ -55,6 +55,28 @@ namespace CategorizarProdutos.Repositorios
                         VALUES ('Venda', GETDATE(), GETDATE(), 0,1)";
             var cnx = Conexao.ObterConexao();
             await cnx.ExecuteAsync(comando);
+        }
+
+        public async Task<List<OperacaoTributacaoFiscal>> ObterRegrasOperacao(int idOperacaoFiscal)
+        {
+            var query = @"select * from OperacaoTributacaoFiscal where IdOperFiscal=@idOperacaoFiscal";
+            var cnx = Conexao.ObterConexao();
+            var resultado = await cnx.QueryAsync<OperacaoTributacaoFiscal>(query, new { idOperacaoFiscal });
+
+            return (resultado ?? new List<OperacaoTributacaoFiscal>()).ToList();
+        }
+
+        public async Task<OperacaoTributacaoFiscal> InserirRegrasOperacao(OperacaoTributacaoFiscal regra)
+        {
+            var comando = @"INSERT INTO OperacaoTributacaoFiscal 
+                        (IdOperFiscal, IdTributacaoFiscal, TipoRegra, Ncm) 
+                        VALUES (@IdOperFiscal, @IdTributacaoFiscal, @TipoRegra, @Ncm)";
+            var cnx = Conexao.ObterConexao();
+            var idRegra = await cnx.ExecuteAsync(comando, regra);
+
+            regra.Id = idRegra;
+
+            return regra;
         }
     }
 }

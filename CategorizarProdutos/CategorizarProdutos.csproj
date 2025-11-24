@@ -228,6 +228,7 @@
     <Compile Include="Models\Natureza\NaturezaTributacao.cs" />
     <Compile Include="Models\OperacoesFiscais\OperacaoFiscal.cs" />
     <Compile Include="Models\OperacoesFiscais\OperacaoFiscalClassificacao.cs" />
+    <Compile Include="Models\OperacoesFiscais\OperacaoTributacaoFiscal.cs" />
     <Compile Include="Models\Produtos\ProdutoClassificacao.cs" />
     <Compile Include="Dto\ProdutosClassificados.cs" />
     <Compile Include="Models\Tabelas\ClassifTributaria.cs" />

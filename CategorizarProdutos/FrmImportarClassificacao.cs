@@ -86,6 +86,7 @@ namespace CategorizarProdutos
 
             var tribCadastradas = await tributacaoFiscalRepo.ObterTodas();
             var classificGrid = ObterClassificacoesGrid();
+            var novosRegistros = false;
             foreach (var classificacao in classificGrid)
             {
                 var registro = tribCadastradas.Find(t => t.CclassTrib == classificacao.CClassTrib);
@@ -102,8 +103,89 @@ namespace CategorizarProdutos
                         pRedutor = 0m,
                         TpOperGov = 0
                     });
+                    novosRegistros = true;
                 }
             }
+
+            // recarrega as tributacoes
+            if(novosRegistros)
+                tribCadastradas = await tributacaoFiscalRepo.ObterTodas();
+
+
+            var OperacaoFRepo = new OperacaoFiscalRepository();
+            var regras = await OperacaoFRepo.ObterRegrasOperacao(Convert.ToInt32(idOperacao));
+            foreach (var classificacao in classificGrid)
+            {
+                var tributacao = tribCadastradas.Find(t => t.CclassTrib == classificacao.CClassTrib);
+                var cClassTribPadrao = "000001";
+
+                var iscClassTribPadrao = classificacao.CClassTrib.Equals(cClassTribPadrao);
+
+                OperacaoTributacaoFiscal regra;
+                if (iscClassTribPadrao)
+                {
+                    regra = regras.Find(r => r.IdTributacaoFiscal == tributacao.Id && r.TipoRegra == 1);
+                    if(regra == null)
+                    {
+                        await OperacaoFRepo.InserirRegrasOperacao(new OperacaoTributacaoFiscal
+                        {
+                            IdOperFiscal = Convert.ToInt32(idOperacao),
+                            IdTributacaoFiscal = tributacao.Id,
+                            TipoRegra = 1,
+                            Ncm = ""
+                        });
+                    }
+
+                    _classificacoes.RemoveAll(t => t.CClassTrib == classificacao.CClassTrib);
+                    continue;
+                }
+                else
+                {
+                    var registrosClassif = _classificacoes
+                                        .Where(t => t.CClassTrib == classificacao.CClassTrib)
+                                        .GroupBy(c => new { c.Ncm, c.CClassTrib })
+                                        .Select(x => x.First())
+                                        .ToList();
+                    foreach (var registroClassif in registrosClassif)
+                    {
+                        regra = regras.Find(r => r.IdTributacaoFiscal == tributacao.Id && r.TipoRegra == 2 && r.Ncm.Equals(registroClassif.Ncm));
+                        if(regra == null)
+                        {
+                            await OperacaoFRepo.InserirRegrasOperacao(new OperacaoTributacaoFiscal
+                            {
+                                IdOperFiscal = Convert.ToInt32(idOperacao),
+                                IdTributacaoFiscal = tributacao.Id,
+                                TipoRegra = 2,
+                                Ncm = registroClassif.Ncm
+                            });
+                        }
+                    }
+                }
+
+                    
+                //var registrosClassif = _classificacoes.Where(t => t.CClassTrib == classificacao.CClassTrib).ToList();
+                //foreach (var registroClassif in registrosClassif)
+                //{
+
+                //}
+
+                //_classificacoes.RemoveAll(t => t.CClassTrib == classificacao.CClassTrib);
+                //var registroRegra = regras.
+
+                //if (classificacao.CClassTrib.Equals(cClassTribPadrao))
+                //{
+
+                //}
+                //else
+                //{
+
+                //}
+
+
+            }
+
+
+
 
             var teste = "";
 
