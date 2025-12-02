@@ -11,6 +11,7 @@
         public int IndGTransfCred { get; set; }
         public int IndGCredPresIbsZfm { get; set; }
         public int IndGAjusteCompet { get; set; }        
+        public int IndRedutorBC { get; set; }        
     }
 
 }

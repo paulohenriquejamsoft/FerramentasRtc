@@ -100,7 +100,7 @@
             btnClassTrib031025.Name = "btnClassTrib031025";
             btnClassTrib031025.Size = new Size(190, 23);
             btnClassTrib031025.TabIndex = 3;
-            btnClassTrib031025.Text = "Ler - Tab ClassTrib - 03/10/2025";
+            btnClassTrib031025.Text = "Ler - Tab ClassTrib - 24/11/2025";
             btnClassTrib031025.UseVisualStyleBackColor = true;
             btnClassTrib031025.Click += btnClassTrib031025_Click;
             // 

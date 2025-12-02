@@ -14,7 +14,7 @@ namespace SincApiSefaz.Servicos
 
             using (var workbook = new XLWorkbook(arquivoXls))
             {
-                var worksheet = workbook.Worksheet(1); // Primeira planilha
+                var worksheet = workbook.Worksheet(2); // Primeira planilha
                 var linhas = worksheet.RangeUsed().RowsUsed().Skip(1); // Pula o cabeçalho
 
                 foreach (var linha in linhas)
@@ -27,11 +27,14 @@ namespace SincApiSefaz.Servicos
                     linha.Cell(7).TryGetValue<int>(out int indGTransfCred);
                     linha.Cell(8).TryGetValue<int>(out int indGCredPresIbsZfm);
                     linha.Cell(9).TryGetValue<int>(out int indGAjusteCompet);
+                    linha.Cell(10).TryGetValue<int>(out int indRedutorBaseBc);
 
-                    var tamanhoCst = 3;
-                    if (cstIbs.Length != tamanhoCst)
+                    
+                    if (cstIbs.Length == 0)
                         continue;
 
+                    var tamanhoCst = 3;
+                    cstIbs = cstIbs.PadLeft(tamanhoCst, '0');
                     var item = new Cst03102025
                     {
                         CstIbsCbs = cstIbs,
@@ -42,13 +45,14 @@ namespace SincApiSefaz.Servicos
                         IndGDif = indGDif,
                         IndGTransfCred = indGTransfCred,
                         IndGCredPresIbsZfm = indGCredPresIbsZfm,
-                        IndGAjusteCompet = indGAjusteCompet
+                        IndGAjusteCompet = indGAjusteCompet,
+                        IndRedutorBC = indRedutorBaseBc
                     };
 
                     listaCsts.Add(item);
                 }
 
-                worksheet = workbook.Worksheet(2); // Primeira planilha
+                worksheet = workbook.Worksheet(1); // Primeira planilha
                 linhas = worksheet.RangeUsed().RowsUsed().Skip(1); // Pula o cabeçalho
 
                 foreach (var linha in linhas)
@@ -69,15 +73,15 @@ namespace SincApiSefaz.Servicos
                     linha.Cell(16).TryGetValue<bool>(out bool indgMonoRet);
                     linha.Cell(17).TryGetValue<bool>(out bool indgMonoDif);
                     linha.Cell(18).TryGetValue<bool>(out bool indgEstornoCred);
-                    linha.Cell(20).TryGetValue<DateTime>(out DateTime dIniVig);
-                    linha.Cell(21).TryGetValue<DateTime?>(out DateTime? dFimVig);
-                    linha.Cell(22).TryGetValue<DateTime>(out DateTime dataAtualizacao);
+                    linha.Cell(19).TryGetValue<DateTime>(out DateTime dIniVig);
+                    linha.Cell(20).TryGetValue<DateTime?>(out DateTime? dFimVig);
+                    linha.Cell(21).TryGetValue<DateTime>(out DateTime dataAtualizacao);
 
-                    linha.Cell(24).TryGetValue<bool>(out bool indNfe);
-                    linha.Cell(25).TryGetValue<bool>(out bool indNfce);
-                    linha.Cell(26).TryGetValue<bool>(out bool indCte);
-                    linha.Cell(32).TryGetValue<bool>(out bool indNfse);
-                    linha.Cell(39).TryGetValue<string>(out string link);
+                    linha.Cell(23).TryGetValue<bool>(out bool indNfe);
+                    linha.Cell(24).TryGetValue<bool>(out bool indNfce);
+                    linha.Cell(25).TryGetValue<bool>(out bool indCte);
+                    linha.Cell(31).TryGetValue<bool>(out bool indNfse);
+                    linha.Cell(38).TryGetValue<string>(out string link);
 
                     var tamanhoMinimocClassTrib = 6;
                     if (cClassTrib.Length < tamanhoMinimocClassTrib)

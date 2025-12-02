@@ -57,7 +57,14 @@ namespace SincApiSefaz
         {
             try
             {
-                var caminhoArquivo = "C:\\Users\\PauloHenrique\\Downloads\\CST_cClassTrib_2025-10-03_Public_verde.xlsx";
+                var caminhoArquivo = "";
+                using (var dialogo = new OpenFileDialog())
+                {
+                    caminhoArquivo = dialogo.ShowDialog() == DialogResult.OK ? dialogo.FileName : "";
+                }
+
+                if (string.IsNullOrWhiteSpace(caminhoArquivo))
+                    return;
 
                 var excelInstance = new ImportacaoTabClassTrib();
                 var (csts, classificacoes) = excelInstance.ExtrairDados(caminhoArquivo);
@@ -71,6 +78,11 @@ namespace SincApiSefaz
                 //System.IO.File.WriteAllText("tabela_cst_cte.json", planilha, System.Text.Encoding.UTF8);
 
                 await excelInstance.AtualizarCstsBanco(csts);
+
+                foreach (var classificacao in classificacoes)
+                {
+                    classificacao.IndRedutorBase = csts.FirstOrDefault(x => x.CstIbsCbs == classificacao.CstIbsCbs)?.IndRedutorBC == 1;                  
+                }
                 await excelInstance.AtualizarCClassificacoesBanco(classificacoes);
 
             }
